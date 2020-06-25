@@ -10,11 +10,17 @@ import (
 	"github.com/FotiadisM/homebnb/server/review"
 	"github.com/FotiadisM/homebnb/server/user"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 
 	l := log.New(os.Stderr, "server: ", log.LstdFlags)
+
+	err := godotenv.Load()
+	if err != nil {
+		l.Fatalln("Error loading .env file:", err)
+	}
 
 	r := mux.NewRouter()
 
@@ -37,7 +43,7 @@ func main() {
 	r.HandleFunc("/review/{id:[0-9]+}", rh.DeleteReview).Methods("DELETE")
 
 	s := http.Server{
-		Addr:         ":8080",
+		Addr:         ":" + os.Getenv("SERVER_PORT"),
 		Handler:      r,
 		ErrorLog:     l,
 		ReadTimeout:  5 * time.Second,
@@ -45,8 +51,8 @@ func main() {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	err := s.ListenAndServe()
-	if err == nil {
-		l.Println("Error starting server: ", err)
+	err = s.ListenAndServe()
+	if err != nil {
+		l.Fatalln("Error starting server:", err)
 	}
 }
