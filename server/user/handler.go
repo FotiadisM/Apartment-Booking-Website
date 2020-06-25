@@ -15,34 +15,22 @@ func NewHandler(l *log.Logger) *Handler {
 	return &Handler{l}
 }
 
-func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
-	switch r.Method {
-	case http.MethodGet:
-		h.getUser(w, r)
-		return
-
-	case http.MethodPost:
-		h.addUser(w, r)
-		return
-
-	case http.MethodPut:
-		h.updateUser(w, r)
-		return
-
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	}
-}
-
-func (h *Handler) getUser(w http.ResponseWriter, r *http.Request) {
+// GetUser is a HandleFunc that returns a user
+func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("getUser"))
 }
 
-func (h *Handler) addUser(w http.ResponseWriter, r *http.Request) {
+// AddUser is a HandleFunc that adds a new user
+func (h *Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("addUser"))
 }
 
-func (h *Handler) updateUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("addUser"))
+// UpdateUser is a Handlefunc that updates a user
+func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("updateUser"))
+}
+
+// DeleteUser is a HandleFunc that deletes a user
+func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("deleteUser"))
 }
