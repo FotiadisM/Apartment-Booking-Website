@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/FotiadisM/homebnb/server/auth"
 	"github.com/FotiadisM/homebnb/server/listing"
 	"github.com/FotiadisM/homebnb/server/review"
 	"github.com/FotiadisM/homebnb/server/user"
@@ -29,6 +30,9 @@ func main() {
 	r.HandleFunc("/user/{id:[0-9]+}", uh.GetUser).Methods("GET")
 	r.HandleFunc("/user/{id:[0-9]+}", uh.UpdateUser).Methods("PUT")
 	r.HandleFunc("/user/{id:[0-9]+}", uh.DeleteUser).Methods("DELETE")
+
+	ah := auth.NewAuth(l)
+	r.HandleFunc("/login", ah.Login).Methods("GET")
 
 	lh := listing.NewHandler(l)
 	r.HandleFunc("/listing", lh.AddListing).Methods("POST")
