@@ -11,6 +11,7 @@ type User struct {
 	Role            string    `json:"role"`
 	Email           string    `json:"email"`
 	TelephoneNumber string    `json:"tel_number"`
+	Varified        bool      `json:"varified"`
 	Created         time.Time `json:"-"`
 	Updated         time.Time `json:"-"`
 }

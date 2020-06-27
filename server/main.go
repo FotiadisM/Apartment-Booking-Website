@@ -25,26 +25,33 @@ func main() {
 
 	r := mux.NewRouter()
 
-	uh := user.NewHandler(l)
-	r.HandleFunc("/user", uh.AddUser).Methods("POST")
-	r.HandleFunc("/user/{id:[0-9]+}", uh.GetUser).Methods("GET")
-	r.HandleFunc("/user/{id:[0-9]+}", uh.UpdateUser).Methods("PUT")
-	r.HandleFunc("/user/{id:[0-9]+}", uh.DeleteUser).Methods("DELETE")
-
 	ah := auth.NewAuth(l)
 	r.HandleFunc("/login", ah.Login).Methods("GET")
+	r.HandleFunc("/register", ah.Register).Methods("GET")
+	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
+
+	uh := user.NewHandler(l)
+	sd := r.PathPrefix("/user").Subrouter()
+	sd.HandleFunc("", uh.AddUser).Methods("POST")
+	sd.HandleFunc("/{id:[0-9]+}", uh.GetUser).Methods("GET")
+	sd.HandleFunc("/{id:[0-9]+}", uh.UpdateUser).Methods("PUT")
+	sd.HandleFunc("/{id:[0-9]+}", uh.DeleteUser).Methods("DELETE")
+	sd.Use(ah.TokenAuthMiddleware)
 
 	lh := listing.NewHandler(l)
-	r.HandleFunc("/listing", lh.AddListing).Methods("POST")
-	r.HandleFunc("/listing/{id:[0-9]+}", lh.GetListing).Methods("GET")
-	r.HandleFunc("/listing/{id:[0-9]+}", lh.UpdateListing).Methods("PUT")
-	r.HandleFunc("/listing/{id:[0-9]+}", lh.DeleteListing).Methods("DELETE")
+	ls := r.PathPrefix("/listing").Subrouter()
+	ls.HandleFunc("", lh.AddListing).Methods("POST")
+	ls.HandleFunc("/{id:[0-9]+}", lh.GetListing).Methods("GET")
+	ls.HandleFunc("/{id:[0-9]+}", lh.UpdateListing).Methods("PUT")
+	ls.HandleFunc("/{id:[0-9]+}", lh.DeleteListing).Methods("DELETE")
+	ls.Use(ah.TokenAuthMiddleware)
 
 	rh := review.NewHandler(l)
-	r.HandleFunc("/review", rh.AddReview).Methods("POST")
-	r.HandleFunc("/review/{id:[0-9]+}", rh.GetReview).Methods("GET")
-	r.HandleFunc("/review/{id:[0-9]+}", rh.UpdateReview).Methods("PUT")
-	r.HandleFunc("/review/{id:[0-9]+}", rh.DeleteReview).Methods("DELETE")
+	rs := r.PathPrefix("/review").Subrouter()
+	rs.HandleFunc("", rh.AddReview).Methods("POST")
+	rs.HandleFunc("/{id:[0-9]+}", rh.GetReview).Methods("GET")
+	rs.HandleFunc("/{id:[0-9]+}", rh.UpdateReview).Methods("PUT")
+	rs.HandleFunc("/{id:[0-9]+}", rh.DeleteReview).Methods("DELETE")
 
 	s := http.Server{
 		Addr:         ":" + os.Getenv("SERVER_PORT"),

@@ -10,7 +10,6 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/joho/godotenv"
 	"github.com/twinj/uuid"
 )
 
@@ -19,17 +18,7 @@ type Auth struct {
 	l *log.Logger
 }
 
-// TokenDetails includes token details
-type TokenDetails struct {
-	AccessToken  string
-	RefreshToken string
-	AccessUUID   string
-	RefreshUUID  string
-	AtExpires    int64
-	RtExpires    int64
-}
-
-type userInfo struct {
+type userLoginInfo struct {
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
 }
@@ -39,9 +28,9 @@ func NewAuth(l *log.Logger) *Auth {
 	return &Auth{l}
 }
 
-// Login Handles authentications
+// Login authenticates user and returns access and refresh tokens
 func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
-	u := userInfo{}
+	u := userLoginInfo{}
 	err := json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
 		a.l.Println("Error decoding JSON", err)
@@ -52,60 +41,70 @@ func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	var userID uint64 = 1
 	role := "tenant"
 
-	td, err := a.CreateToken(userID, role)
+	at, err := createAccessToken(userID, role)
 	if err != nil {
-		http.Error(w, "Error", http.StatusUnprocessableEntity)
+		a.l.Println("Error creating AccesToken:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	// store tokens in redis
+	rt, err := createRefreshToken(userID)
+	if err != nil {
+		a.l.Println("Error creating RefreshToken:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// store rt in redis
 
 	tokens := map[string]string{
-		"access_token":  td.AccessToken,
-		"refresh_token": td.RefreshToken,
+		"access_token":  at,
+		"refresh_token": rt,
 	}
 
 	json.NewEncoder(w).Encode(tokens)
 }
 
-// CreateToken creates a new token
-func (a *Auth) CreateToken(userID uint64, role string) (td *TokenDetails, err error) {
-	err = godotenv.Load()
+// Register registers a new user and retturn accesss and refresh tokens and the newly created user
+func (a *Auth) Register(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// Refresh registers a new user and retturn accesss and refresh tokens and the newly created user
+func (a *Auth) Refresh(w http.ResponseWriter, r *http.Request) {
+	t, err := verifyToken(r)
 	if err != nil {
-		a.l.Println("Error loading .env file", err)
+		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	td = &TokenDetails{}
-	td.AtExpires = time.Now().Add(time.Minute * 15).Unix()
-	td.AccessUUID = uuid.NewV4().String()
-	td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
-	td.RefreshUUID = uuid.NewV4().String()
-
-	atClaims := jwt.MapClaims{}
-	atClaims["id"] = userID
-	atClaims["role"] = role
-	atClaims["access_uuid"] = td.AccessUUID
-	atClaims["exp"] = td.AtExpires
-
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-	td.AccessToken, err = at.SignedString([]byte(os.Getenv("SECRET")))
-	if err != nil {
-		a.l.Println("Error signing token", err)
-		return
+	c, ok := t.Claims.(jwt.MapClaims)
+	if !ok {
+		w.WriteHeader(http.StatusUnauthorized)
 	}
 
-	rtClaims := jwt.MapClaims{}
-	rtClaims["id"] = userID
-	rtClaims["role"] = role
-	rtClaims["access_uuid"] = td.RefreshUUID
-	rtClaims["exp"] = td.RtExpires
+	fmt.Println(c)
 
-	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
-	td.RefreshToken, err = rt.SignedString([]byte(os.Getenv("SECRET")))
-	if err != nil {
-		a.l.Println("Error signing token", err)
-		return
-	}
+}
+
+func createAccessToken(userID uint64, role string) (token string, err error) {
+	c := jwt.MapClaims{}
+	c["user_id"] = userID
+	c["role"] = role
+	c["exp"] = time.Now().Add(time.Minute * 10).Unix()
+
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
+	token, err = t.SignedString([]byte(os.Getenv("SECRET")))
+
+	return
+}
+
+func createRefreshToken(userID uint64) (token string, err error) {
+	c := jwt.MapClaims{}
+	c["user_id"] = userID
+	c["uuid"] = uuid.NewV4().String()
+	c["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
+
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
+	token, err = t.SignedString([]byte(os.Getenv("SECRET")))
 
 	return
 }
@@ -114,7 +113,6 @@ func extractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 
 	strArr := strings.Split(bearToken, " ")
-	fmt.Println(strArr)
 	if len(strArr) == 2 {
 		return strArr[1]
 	}
@@ -126,11 +124,23 @@ func verifyToken(r *http.Request) (token *jwt.Token, err error) {
 	tokenString := extractToken(r)
 
 	token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
 		return []byte(os.Getenv("SECRET")), nil
 	})
 
 	return
+}
+
+// TokenAuthMiddleware extracts token from header validates it
+func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		_, err := verifyToken(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+
+	})
 }
