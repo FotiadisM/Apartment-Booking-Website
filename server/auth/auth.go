@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,6 +12,12 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
+)
+
+const (
+	secret            string = "TOKEN_SECRET"
+	tokenExpired      string = "Token is expired"
+	wrongSigingMethod string = "Wrong signing method"
 )
 
 // Auth containes Methods for authenitcating a user
@@ -23,6 +30,9 @@ type userLoginInfo struct {
 	Password string `json:"password"`
 }
 
+type userRegisterInfo struct {
+}
+
 // NewAuth creates a new Auth
 func NewAuth(l *log.Logger) *Auth {
 	return &Auth{l}
@@ -31,6 +41,7 @@ func NewAuth(l *log.Logger) *Auth {
 // Login authenticates user and returns access and refresh tokens
 func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	u := userLoginInfo{}
+
 	err := json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
 		a.l.Println("Error decoding JSON", err)
@@ -44,13 +55,15 @@ func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	at, err := createAccessToken(userID, role)
 	if err != nil {
 		a.l.Println("Error creating AccesToken:", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	rt, err := createRefreshToken(userID)
 	if err != nil {
 		a.l.Println("Error creating RefreshToken:", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	// store rt in redis
@@ -60,7 +73,36 @@ func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 		"refresh_token": rt,
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+
 	json.NewEncoder(w).Encode(tokens)
+	if err != nil {
+		a.l.Println("Error encoding JSON", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+// TokenAuthMiddleware extracts token from header validates it
+func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		_, err := verifyToken(r)
+		if err != nil {
+			if err.Error() == tokenExpired {
+				http.Error(w, err.Error(), http.StatusUnauthorized)
+				return
+			}
+			if err.Error() == wrongSigingMethod {
+				a.l.Println(err)
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 // Register registers a new user and retturn accesss and refresh tokens and the newly created user
@@ -72,7 +114,7 @@ func (a *Auth) Register(w http.ResponseWriter, r *http.Request) {
 func (a *Auth) Refresh(w http.ResponseWriter, r *http.Request) {
 	t, err := verifyToken(r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -82,7 +124,6 @@ func (a *Auth) Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println(c)
-
 }
 
 func createAccessToken(userID uint64, role string) (token string, err error) {
@@ -92,7 +133,7 @@ func createAccessToken(userID uint64, role string) (token string, err error) {
 	c["exp"] = time.Now().Add(time.Minute * 10).Unix()
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
-	token, err = t.SignedString([]byte(os.Getenv("SECRET")))
+	token, err = t.SignedString([]byte(os.Getenv(secret)))
 
 	return
 }
@@ -104,7 +145,7 @@ func createRefreshToken(userID uint64) (token string, err error) {
 	c["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
-	token, err = t.SignedString([]byte(os.Getenv("SECRET")))
+	token, err = t.SignedString([]byte(os.Getenv(secret)))
 
 	return
 }
@@ -124,23 +165,12 @@ func verifyToken(r *http.Request) (token *jwt.Token, err error) {
 	tokenString := extractToken(r)
 
 	token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SECRET")), nil
+		//Verify the signing method is HMAC
+		if s, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || s != jwt.SigningMethodHS256 {
+			return nil, errors.New(wrongSigingMethod)
+		}
+		return []byte(os.Getenv(secret)), nil
 	})
 
 	return
-}
-
-// TokenAuthMiddleware extracts token from header validates it
-func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		_, err := verifyToken(r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusUnauthorized)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-
-	})
 }
