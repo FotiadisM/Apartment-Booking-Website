@@ -1,25 +1,21 @@
-package user
+package storage
 
 import (
 	"context"
 	"fmt"
 	"log"
-	"time"
+	"os"
 
+	"github.com/FotiadisM/homebnb/server/modules"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
-	host     = "DB_1_HOST"
-	port     = "DB_1_PORT"
-	user     = "DB_1_USER"
-	password = "DB_1_PASSWORD"
-)
+func addUser(u modules.User) (id primitive.ObjectID, err error) {
 
-// AddTest is a test
-func addTest() {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
@@ -30,16 +26,6 @@ func addTest() {
 	fmt.Println("Connected to MongoDB!")
 
 	collection := client.Database("tedi").Collection("users")
-
-	u := User{
-		UserName:        "username2",
-		FirstName:       "mike",
-		LastName:        "me",
-		Role:            "xalaros",
-		Email:           "mail@mail.com",
-		TelephoneNumber: "420",
-		Created:         time.Now(),
-	}
 
 	fmt.Println(u.ID.IsZero())
 
@@ -55,4 +41,19 @@ func addTest() {
 	if err != nil {
 		log.Println(err)
 	}
+	return
+}
+
+func getUser(id primitive.ObjectID) (u modules.User, err error) {
+
+	return
+}
+
+func updateUser(id string) (err error) {
+
+	return
+}
+func deleteUser(id string) (err error) {
+
+	return
 }

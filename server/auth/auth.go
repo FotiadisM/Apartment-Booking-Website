@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/FotiadisM/homebnb/server/modules"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
 )
@@ -25,14 +26,6 @@ type Auth struct {
 	l *log.Logger
 }
 
-type userLoginInfo struct {
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
-}
-
-type userRegisterInfo struct {
-}
-
 // NewAuth creates a new Auth
 func NewAuth(l *log.Logger) *Auth {
 	return &Auth{l}
@@ -40,7 +33,7 @@ func NewAuth(l *log.Logger) *Auth {
 
 // Login authenticates user and returns access and refresh tokens
 func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
-	u := userLoginInfo{}
+	u := modules.LoginInfo{}
 
 	err := json.NewDecoder(r.Body).Decode(&u)
 	if err != nil {
@@ -49,7 +42,7 @@ func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// auth user Info and get userID and role
-	var userID uint64 = 1
+	userID := "1"
 	role := "tenant"
 
 	at, err := createAccessToken(userID, role)
@@ -126,7 +119,22 @@ func (a *Auth) Refresh(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(c)
 }
 
-func createAccessToken(userID uint64, role string) (token string, err error) {
+// ExtractClaims extracts the token from header, parses it and return the claims
+func ExtractClaims(r *http.Request) (claims map[string]interface{}, err error) {
+	t, err := verifyToken(r)
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := t.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("No claims found")
+	}
+
+	return
+}
+
+func createAccessToken(userID string, role string) (token string, err error) {
 	c := jwt.MapClaims{}
 	c["user_id"] = userID
 	c["role"] = role
@@ -138,7 +146,7 @@ func createAccessToken(userID uint64, role string) (token string, err error) {
 	return
 }
 
-func createRefreshToken(userID uint64) (token string, err error) {
+func createRefreshToken(userID string) (token string, err error) {
 	c := jwt.MapClaims{}
 	c["user_id"] = userID
 	c["uuid"] = uuid.NewV4().String()

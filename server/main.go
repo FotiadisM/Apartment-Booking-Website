@@ -7,9 +7,7 @@ import (
 	"time"
 
 	"github.com/FotiadisM/homebnb/server/auth"
-	"github.com/FotiadisM/homebnb/server/listing"
-	"github.com/FotiadisM/homebnb/server/review"
-	"github.com/FotiadisM/homebnb/server/user"
+	"github.com/FotiadisM/homebnb/server/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
@@ -30,7 +28,7 @@ func main() {
 	r.HandleFunc("/register", ah.Register).Methods("GET")
 	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
 
-	uh := user.NewHandler(l)
+	uh := handlers.NewUserHandler(l)
 	sd := r.PathPrefix("/user").Subrouter()
 	sd.HandleFunc("", uh.AddUser).Methods("POST")
 	sd.HandleFunc("/{id:[0-9]+}", uh.GetUser).Methods("GET")
@@ -38,7 +36,7 @@ func main() {
 	sd.HandleFunc("/{id:[0-9]+}", uh.DeleteUser).Methods("DELETE")
 	sd.Use(ah.TokenAuthMiddleware)
 
-	lh := listing.NewHandler(l)
+	lh := handlers.NewListingHandler(l)
 	ls := r.PathPrefix("/listing").Subrouter()
 	ls.HandleFunc("", lh.AddListing).Methods("POST")
 	ls.HandleFunc("/{id:[0-9]+}", lh.GetListing).Methods("GET")
@@ -46,7 +44,7 @@ func main() {
 	ls.HandleFunc("/{id:[0-9]+}", lh.DeleteListing).Methods("DELETE")
 	ls.Use(ah.TokenAuthMiddleware)
 
-	rh := review.NewHandler(l)
+	rh := handlers.NewReviewHandler(l)
 	rs := r.PathPrefix("/review").Subrouter()
 	rs.HandleFunc("", rh.AddReview).Methods("POST")
 	rs.HandleFunc("/{id:[0-9]+}", rh.GetReview).Methods("GET")
