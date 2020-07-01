@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/FotiadisM/homebnb/server/auth"
+	"github.com/FotiadisM/homebnb/server/modules"
+	"github.com/FotiadisM/homebnb/server/storage"
 	"github.com/gorilla/mux"
 )
 
@@ -35,8 +38,10 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	u := modules.User{}
 	switch role {
 	case "admin":
+		u, err = storage.GetUser(rid)
 
 	case "visitor":
 		w.WriteHeader(http.StatusBadRequest)
@@ -52,15 +57,35 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		u, err = storage.GetUser(rid)
 	}
 
-	w.Write([]byte("getUser"))
+	if err != nil {
+		if err.Error() == storage.ErrNoDocument {
+			w.Write([]byte("No User found"))
+			return
+
+		}
+		h.l.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(u)
+	if err != nil {
+		h.l.Println(err)
+	}
 }
 
 // AddUser is a HandleFunc that adds a new user
 func (h *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
-	// vars := mux.Vars(r)
-	// rid := vars["id"]
+	u := modules.User{}
+
+	err := json.NewDecoder(r.Body).Decode(&u)
+	if err != nil {
+		http.Error(w, "Error reading login info", http.StatusBadRequest)
+		return
+	}
 
 	claims, err := auth.ExtractClaims(r)
 	if err != nil {
@@ -74,15 +99,30 @@ func (h *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	uid := ""
 	switch role {
 	case "admin":
-
+		uid, err = storage.AddUser(u)
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	w.Write([]byte("addUser"))
+	if err != nil {
+		if err.Error() == storage.ErrExists {
+			w.Write([]byte("User already exists"))
+			return
+
+		}
+		h.l.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(uid)
+	if err != nil {
+		h.l.Println(err)
+	}
 }
 
 // UpdateUser is a Handlefunc that updates a user

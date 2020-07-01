@@ -1,5 +1,13 @@
 package storage
 
+const (
+	// ErrExists error
+	ErrExists string = "ErrExists"
+
+	//ErrNoDocument err
+	ErrNoDocument string = "ErrNoDocument"
+)
+
 // Storage defines the properties to connect to a db
 type Storage struct {
 	host     string

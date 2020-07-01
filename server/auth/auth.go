@@ -33,9 +33,9 @@ func NewAuth(l *log.Logger) *Auth {
 
 // Login authenticates user and returns access and refresh tokens
 func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
-	u := modules.LoginInfo{}
+	li := modules.LoginInfo{}
 
-	err := json.NewDecoder(r.Body).Decode(&u)
+	err := json.NewDecoder(r.Body).Decode(&li)
 	if err != nil {
 		a.l.Println("Error decoding JSON", err)
 		http.Error(w, "Error reading login info", http.StatusBadRequest)
@@ -43,7 +43,7 @@ func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 	// auth user Info and get userID and role
 	userID := "1"
-	role := "tenant"
+	role := "admin"
 
 	at, err := createAccessToken(userID, role)
 	if err != nil {
