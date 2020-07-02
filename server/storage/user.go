@@ -12,8 +12,72 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// AddLogin stores the user's login information
+func AddLogin(l modules.LoginInfo) (err error) {
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return
+	}
+
+	coll := client.Database("tedi").Collection("login")
+
+	_, err = coll.InsertOne(context.TODO(), l)
+	if err != nil {
+		return
+	}
+
+	err = client.Disconnect(context.TODO())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// GetLogin retrievs the user's login information
+func GetLogin(userName string) (l modules.LoginInfo, err error) {
+
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return
+	}
+
+	coll := client.Database("tedi").Collection("login")
+
+	sr := coll.FindOne(context.TODO(), bson.D{primitive.E{Key: "user_name", Value: userName}})
+	if sr.Err() != nil {
+		if sr.Err() == mongo.ErrNoDocuments {
+			return l, errors.New(ErrNoDocument)
+		}
+
+		return
+	}
+
+	err = sr.Decode(&l)
+	if err != nil {
+		return
+	}
+
+	err = client.Disconnect(context.TODO())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 // AddUser adds a new user to the database
 func AddUser(u modules.User) (id string, err error) {
+
+	if u.Role == "admin" {
+		return "", errors.New("User can't be of type admin")
+	}
 
 	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
 	clientOptions := options.Client().ApplyURI(uri)
@@ -43,7 +107,7 @@ func AddUser(u modules.User) (id string, err error) {
 
 	err = client.Disconnect(context.TODO())
 	if err != nil {
-		return id, nil
+		return
 	}
 
 	return
@@ -81,7 +145,7 @@ func GetUser(id string) (u modules.User, err error) {
 
 	err = client.Disconnect(context.TODO())
 	if err != nil {
-		return u, nil
+		return
 	}
 
 	return

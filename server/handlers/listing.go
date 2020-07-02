@@ -36,7 +36,7 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -46,15 +46,15 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 	case "landlord":
 		cid, ok := claims["user_id"].(string)
 		if !ok {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		if cid != rid {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		if cid != rid {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
 	default:
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -74,7 +74,7 @@ func (h *ListingHandler) UpdateListing(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -84,15 +84,15 @@ func (h *ListingHandler) UpdateListing(w http.ResponseWriter, r *http.Request) {
 	case "landlord":
 		cid, ok := claims["user_id"].(string)
 		if !ok {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		if cid != rid {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		if cid != rid {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
 	default:
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -112,7 +112,7 @@ func (h *ListingHandler) DeleteListing(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -122,15 +122,15 @@ func (h *ListingHandler) DeleteListing(w http.ResponseWriter, r *http.Request) {
 	case "landlord":
 		cid, ok := claims["user_id"].(string)
 		if !ok {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		if cid != rid {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		if cid != rid {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
 	default:
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 

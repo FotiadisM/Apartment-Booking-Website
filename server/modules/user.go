@@ -6,19 +6,11 @@ import (
 
 // LoginInfo describes the the propertied fro login
 type LoginInfo struct {
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
-}
-
-// UserRegisterInfo describes the fields for the registration proccess
-type UserRegisterInfo struct {
-	UserName        string `json:"user_name" bson:"user_name"`
-	Password        string `json:"password" bson:"password"`
-	FirstName       string `json:"first_name" bson:"first_name"`
-	LastName        string `json:"last_name" bson:"last_name"`
-	Role            string `json:"role" bson:"role"`
-	Email           string `json:"email" bson:"email"`
-	TelephoneNumber string `json:"tel_number" bson:"telephone_num"`
+	ID       string `json:"-" bson:"_id,omitempty"`
+	UserID   string `json:"-" bson:"user_id"`
+	UserName string `json:"user_name" bson:"user_name"`
+	Role     string `json:"role" bson:"role"`
+	Password string `json:"user_password" bson:"user_password"`
 }
 
 // User defines the properties of a user

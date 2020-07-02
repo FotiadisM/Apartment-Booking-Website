@@ -1,9 +1,11 @@
 package auth
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,14 +13,16 @@ import (
 	"time"
 
 	"github.com/FotiadisM/homebnb/server/modules"
+	"github.com/FotiadisM/homebnb/server/storage"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
-	secret            string = "TOKEN_SECRET"
-	tokenExpired      string = "Token is expired"
-	wrongSigingMethod string = "Wrong signing method"
+	secret               string = "TOKEN_SECRET"
+	errTokenExpired      string = "ErrtokenExpired"
+	errWrongSigingMethod string = "ErrWrongSigingMethod"
 )
 
 // Auth containes Methods for authenitcating a user
@@ -33,42 +37,97 @@ func NewAuth(l *log.Logger) *Auth {
 
 // Login authenticates user and returns access and refresh tokens
 func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
-	li := modules.LoginInfo{}
+	var li map[string]interface{}
 
 	err := json.NewDecoder(r.Body).Decode(&li)
 	if err != nil {
-		a.l.Println("Error decoding JSON", err)
-		http.Error(w, "Error reading login info", http.StatusBadRequest)
+		a.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
+		return
 	}
 
-	// auth user Info and get userID and role
-	userID := "1"
-	role := "admin"
-
-	at, err := createAccessToken(userID, role)
+	l, err := storage.GetLogin(li["user_name"].(string))
 	if err != nil {
-		a.l.Println("Error creating AccesToken:", err)
+		if err.Error() == storage.ErrNoDocument {
+			http.Error(w, "Wrong credentials", http.StatusUnauthorized)
+			return
+		}
+		a.l.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	rt, err := createRefreshToken(userID)
+	err = bcrypt.CompareHashAndPassword([]byte(l.Password), []byte(li["user_password"].(string)))
 	if err != nil {
-		a.l.Println("Error creating RefreshToken:", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		a.l.Println(err)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	// store rt in redis
-
-	tokens := map[string]string{
-		"access_token":  at,
-		"refresh_token": rt,
-	}
+	tokens, err := createTokens(l.UserID, l.Role)
 
 	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(tokens)
+	if err != nil {
+		a.l.Println("Error encoding JSON", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+// Register registers a new user and retturn accesss and refresh tokens and the newly created user
+func (a *Auth) Register(w http.ResponseWriter, r *http.Request) {
+
+	buf, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.l.Println(err)
+	}
+	rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
+	rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
+
+	u := modules.User{}
+
+	err = json.NewDecoder(rdr1).Decode(&u)
+	if err != nil {
+		a.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
+		return
+	}
+
+	id, err := storage.AddUser(u)
+	if err != nil {
+		if err.Error() == storage.ErrExists {
+			w.Write([]byte("Username is taken"))
+			return
+		}
+		a.l.Println("Error inseting user in the database", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	l := modules.LoginInfo{}
+	err = json.NewDecoder(rdr2).Decode(&l)
+	if err != nil {
+		a.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(l.Password), bcrypt.DefaultCost)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	l.Password = string(hash)
+
+	l.UserID = id
+	err = storage.AddLogin(l)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(id)
 	if err != nil {
 		a.l.Println("Error encoding JSON", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -81,11 +140,11 @@ func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
 
 		_, err := verifyToken(r)
 		if err != nil {
-			if err.Error() == tokenExpired {
+			if err.Error() == errTokenExpired {
 				http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
 			}
-			if err.Error() == wrongSigingMethod {
+			if err.Error() == errWrongSigingMethod {
 				a.l.Println(err)
 				w.WriteHeader(http.StatusUnauthorized)
 				return
@@ -96,11 +155,6 @@ func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
-}
-
-// Register registers a new user and retturn accesss and refresh tokens and the newly created user
-func (a *Auth) Register(w http.ResponseWriter, r *http.Request) {
-
 }
 
 // Refresh registers a new user and retturn accesss and refresh tokens and the newly created user
@@ -158,6 +212,26 @@ func createRefreshToken(userID string) (token string, err error) {
 	return
 }
 
+func createTokens(userID string, role string) (tokens map[string]string, err error) {
+	at, err := createAccessToken(userID, role)
+	if err != nil {
+		return
+	}
+
+	rt, err := createRefreshToken(userID)
+	if err != nil {
+		return
+	}
+
+	// store rt in redis
+
+	tokens = make(map[string]string)
+	tokens["access_token"] = at
+	tokens["refresh_token"] = rt
+
+	return
+}
+
 func extractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 
@@ -175,7 +249,7 @@ func verifyToken(r *http.Request) (token *jwt.Token, err error) {
 	token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		//Verify the signing method is HMAC
 		if s, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || s != jwt.SigningMethodHS256 {
-			return nil, errors.New(wrongSigingMethod)
+			return nil, errors.New(errWrongSigingMethod)
 		}
 		return []byte(os.Getenv(secret)), nil
 	})

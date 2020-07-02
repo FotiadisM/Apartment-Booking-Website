@@ -34,7 +34,7 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -44,17 +44,17 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		u, err = storage.GetUser(rid)
 
 	case "visitor":
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusForbidden)
 		return
 
 	default:
 		cid, ok := claims["user_id"].(string)
 		if !ok {
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		if cid != rid {
-			w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 		u, err = storage.GetUser(rid)
@@ -95,7 +95,7 @@ func (h *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -104,7 +104,7 @@ func (h *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 	case "admin":
 		uid, err = storage.AddUser(u)
 	default:
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -138,7 +138,7 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -146,17 +146,17 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	case "admin":
 
 	case "visitor":
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusForbidden)
 		return
 
 	default:
 		cid, ok := claims["user_id"].(string)
 		if !ok {
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		if cid != rid {
-			w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 	}
@@ -177,7 +177,7 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	role, ok := claims["role"].(string)
 	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -185,17 +185,17 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	case "admin":
 
 	case "visitor":
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusForbidden)
 		return
 
 	default:
 		cid, ok := claims["user_id"].(string)
 		if !ok {
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		if cid != rid {
-			w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 	}
