@@ -52,7 +52,7 @@ func main() {
 	rs.HandleFunc("/{id}", rh.DeleteReview).Methods("DELETE")
 
 	s := http.Server{
-		Addr:         ":" + os.Getenv("SERVER_PORT"),
+		Addr:         os.Getenv("SERVER_HOST") + ":" + os.Getenv("SERVER_PORT"),
 		Handler:      r,
 		ErrorLog:     l,
 		ReadTimeout:  5 * time.Second,
