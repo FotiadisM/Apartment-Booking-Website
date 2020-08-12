@@ -5,6 +5,8 @@ import "bootstrap/dist/js/bootstrap.js";
 import App from "./Containers/App/App";
 import * as serviceWorker from "./serviceWorker";
 
+import "./index.css";
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

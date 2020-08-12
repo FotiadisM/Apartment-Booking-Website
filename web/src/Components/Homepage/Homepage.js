@@ -16,7 +16,7 @@ function Homepage({ history }) {
         </h4>
         <hr />
         <form
-          className="border rounded p-4 mt-4 row needs-validation"
+          className="row border rounded p-4 mt-4 needs-validation"
           noValidate
         >
           <div className="col-12 mb-2">
@@ -31,7 +31,7 @@ function Homepage({ history }) {
               required
             />
           </div>
-          <div className="col-6">
+          <div className="col-sm-6">
             <label htmlFor="from" className="form-label">
               From:
             </label>
@@ -43,7 +43,7 @@ function Homepage({ history }) {
               required
             />
           </div>
-          <div className="col-6">
+          <div className="col-sm-6">
             <label htmlFor="to" className="form-label">
               To:
             </label>
