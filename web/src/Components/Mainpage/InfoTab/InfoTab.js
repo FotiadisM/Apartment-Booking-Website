@@ -4,7 +4,7 @@ import Carousel from "./Carousel";
 function InfoTab({ currList }) {
   return (
     <div className="InfoTab">
-      <hr className="ml-0" />
+      <hr />
 
       <div>
         <Carousel />

@@ -1,12 +1,12 @@
 import React from "react";
+import LogedOut from "./LogedOut";
+import LogedIn from "./LogedIn";
 
-function NavBAr() {
+function NavBAr({ userState }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
       <div className="container">
-        <a className="navbar-brand" href="/#">
-          Homebnb
-        </a>
+        <div className="navbar-brand">Homebnb</div>
         <button
           className="navbar-toggler"
           type="button"
@@ -19,23 +19,24 @@ function NavBAr() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <ul className="navbar-nav mr-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav mr-auto mb-2 mb-lg-0 mb-0">
             <li className="nav-item">
-              <a className="nav-link" href="/#">
+              <div className="nav-link active" href="/#">
                 About
-              </a>
+              </div>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/#">
+              <div className="nav-link" href="/#">
                 Become a Host
-              </a>
+              </div>
             </li>
           </ul>
-          <div className="d-flex">
-            <button className="mr-2 btn btn-outline-primary px-3">
-              Log In
-            </button>
-            <button className="ml-2 btn btn-primary px-3">Sign Up</button>
+          <div>
+            {userState[0].isLogedIn ? (
+              <LogedIn userState={userState} />
+            ) : (
+              <LogedOut userState={userState} />
+            )}
           </div>
         </div>
       </div>

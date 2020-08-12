@@ -1,14 +1,14 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import NavBAr from "../NavBar/NavBar";
 
-const search = (history) => {
-  history.push("/main");
-};
+function Homepage({ userState, searchState }) {
+  let history = useHistory();
+  // const [search, setSearch] = searchState;
 
-function Homepage({ history }) {
   return (
     <div className="Homepage">
-      <NavBAr />
+      <NavBAr userState={userState} />
 
       <div className="container" style={{ maxWidth: "700px" }}>
         <h4 className="font-weight-bold mt-5" style={{ fontSize: "6em" }}>
@@ -68,7 +68,7 @@ function Homepage({ history }) {
             <button
               type="submit"
               className="form-control btn-primary"
-              onClick={() => search(history)}
+              onClick={() => history.push("/main")}
             >
               Search
             </button>

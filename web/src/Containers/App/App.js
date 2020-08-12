@@ -6,7 +6,14 @@ import Homepage from "../../Components/Homepage/Homepage";
 import Mainpage from "../../Components/Mainpage/Mainpage";
 
 function App() {
-  // const [user, setUser] = useState({});
+  const userState = useState({
+    isLogedIn: true,
+    access_token: "",
+    user: {
+      id: 0,
+      name: "Michail Fotiadis",
+    },
+  });
 
   const searchState = useState({
     destination: "",
@@ -19,11 +26,19 @@ function App() {
     <div className="App" style={{ height: "100%" }}>
       <BrowserRouter>
         <Switch>
-          <Route path="/" exact component={Homepage} />
+          <Route
+            path="/"
+            exact
+            render={() => (
+              <Homepage userState={userState} searchState={searchState} />
+            )}
+          />
           <Route
             path="/main"
             exact
-            render={() => <Mainpage searchState={searchState} />}
+            render={() => (
+              <Mainpage userState={userState} searchState={searchState} />
+            )}
           />
           <Route path="/" render={() => <div>404</div>} />
         </Switch>

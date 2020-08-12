@@ -4,12 +4,12 @@ import Card from "./Card";
 function ListingsTab({ listings, setCurrList }) {
   return (
     <div className="ListingsTab">
-      <hr className="mr-1" />
-      <div className="row gx-0 gy-2">
+      <hr />
+      <div className="row gx-0 gy-3">
         {listings.map((listing) => {
           return (
             <div className="col-12" key={listing.id}>
-              <Card listing={listing} />
+              <Card listing={listing} setCurrList={setCurrList} />
             </div>
           );
         })}

@@ -1,9 +1,9 @@
 import React from "react";
 import room from "../../../assets/room.jpg";
 
-function Card({ listing }) {
+function Card({ listing, setCurrList }) {
   return (
-    <div className="Card row g-0 mx-2 my-1 border rounded-lg">
+    <div className="Card row g-0 border rounded-lg">
       <div className="col-sm-4">
         <img
           className="rounded-left rounded-lg"
@@ -22,7 +22,12 @@ function Card({ listing }) {
           </div>
           <div className="d-flex justify-content-between align-items-end">
             <h5 className="">From {listing.price_day}$ per day</h5>
-            <button className="btn btn-primary">Learn More</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setCurrList(listing)}
+            >
+              Learn More
+            </button>
           </div>
         </div>
       </div>
