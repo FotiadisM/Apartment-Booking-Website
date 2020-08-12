@@ -11,7 +11,8 @@ function App() {
     access_token: "",
     user: {
       id: 0,
-      name: "Michail Fotiadis",
+      name: "Maria Trelomaria",
+      role: "admin",
     },
   });
 

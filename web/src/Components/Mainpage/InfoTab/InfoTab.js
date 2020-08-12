@@ -36,6 +36,8 @@ function InfoTab({ currList }) {
               <button className="btn btn-primary ml-2">Book Now!</button>
             </div>
           </div>
+          <hr className="mx-3 my-4" />
+          <div className="border rounded-lg p-2">Reviews</div>
         </div>
       </div>
     </div>

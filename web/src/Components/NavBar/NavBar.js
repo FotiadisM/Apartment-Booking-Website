@@ -21,12 +21,12 @@ function NavBAr({ userState }) {
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
           <ul className="navbar-nav mr-auto mb-2 mb-lg-0 mb-0">
             <li className="nav-item">
-              <div className="nav-link active" href="/#">
+              <div className="nav-link active" style={{ cursor: "pointer" }}>
                 About
               </div>
             </li>
             <li className="nav-item">
-              <div className="nav-link" href="/#">
+              <div className="nav-link" style={{ cursor: "pointer" }}>
                 Become a Host
               </div>
             </li>
