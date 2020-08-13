@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NavBAr from "../NavBar/NavBar";
 import SearchBar from "./SearchBar/SearchBar";
 import InfoTab from "./InfoTab/InfoTab";
 import ListingsTab from "./ListingsTab/ListingsTab";
@@ -28,6 +27,23 @@ const array = [
     country: "Greece",
     latitude: "312,42",
     longtitude: "782.54",
+    reviews: [
+      {
+        id: 1,
+        userID: 1,
+        userName: "DIT terminator",
+        score: 5,
+        text:
+          "Yes yes nice apartment, yes very satisfied, I recomend yes yes, luckily didn't find any DIT students yes yes",
+      },
+      {
+        id: 2,
+        userID: 3,
+        userName: "Satoshi nakamoto",
+        score: 4,
+        text: "Cool place",
+      },
+    ],
   },
   {
     id: 2,
@@ -52,6 +68,23 @@ const array = [
     country: "Greece",
     latitude: "312,42",
     longtitude: "782.54",
+    reviews: [
+      {
+        id: 1,
+        userID: 1,
+        userName: "DIT terminator",
+        score: 5,
+        text:
+          "Yes yes nice apartment, yes very satisfied, I recomend yes yes, luckily didn't find any DIT students yes yes",
+      },
+      {
+        id: 2,
+        userID: 3,
+        userName: "Satoshi nakamoto",
+        score: 4,
+        text: "Cool place",
+      },
+    ],
   },
   {
     id: 3,
@@ -91,7 +124,7 @@ const array = [
   },
 ];
 
-function Mainpage({ userState, searchState }) {
+function SearchTab({ userState, searchState }) {
   const [search, setSearch] = searchState;
   const [listings, setListings] = useState([]);
   const [currList, setCurrList] = useState({});
@@ -102,34 +135,20 @@ function Mainpage({ userState, searchState }) {
   }, [search]);
 
   return (
-    <div className="Mainpage d-flex flex-column" style={{ height: "100%" }}>
-      <div className="flex-grow-0 flex-shrink-1" style={{ flexBasis: "auto" }}>
-        <NavBAr userState={userState} />
-      </div>
-      <div
-        className="my-4 flex-grow-1 flex-shrink-1"
-        style={{ flexBasis: "auto" }}
-      >
-        <div className="container">
-          <SearchBar setSearch={setSearch} />
-          <div className="row mt-1">
-            <div className="col-6">
-              <ListingsTab listings={listings} setCurrList={setCurrList} />
-            </div>
-            <div className="col-6">
-              <InfoTab currList={currList} />
-            </div>
+    <div className="SearchTab">
+      <div className="container">
+        <SearchBar setSearch={setSearch} />
+        <div className="row mt-1">
+          <div className="col-6">
+            <ListingsTab listings={listings} setCurrList={setCurrList} />
+          </div>
+          <div className="col-6">
+            <InfoTab currList={currList} />
           </div>
         </div>
-      </div>
-      <div
-        className="flex-grow-0 flex-shrink-0 bg-light"
-        style={{ flexBasis: "120px" }}
-      >
-        footer
       </div>
     </div>
   );
 }
 
-export default Mainpage;
+export default SearchTab;

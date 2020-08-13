@@ -1,6 +1,10 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 function Icons({ user }) {
+  let history = useHistory();
+  console.log(history);
+
   return (
     <div className="Icons">
       <button className="btn btn-outline-dark rounded rounded-lg py-1 px-2 active">
@@ -77,7 +81,10 @@ function Icons({ user }) {
           />
         </svg>
       </button>
-      <button className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2">
+      <button
+        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2"
+        onClick={() => history.push("settings")}
+      >
         <svg
           width="1em"
           height="1em"

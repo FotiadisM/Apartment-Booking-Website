@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import Homepage from "../../Components/Homepage/Homepage";
-import Mainpage from "../../Components/Mainpage/Mainpage";
+import Main from "../Main/Main";
 
 function App() {
   const userState = useState({
-    isLogedIn: true,
+    isLogedIn: false,
     access_token: "",
     user: {
       id: 0,
@@ -25,25 +25,22 @@ function App() {
 
   return (
     <div className="App" style={{ height: "100%" }}>
-      <BrowserRouter>
-        <Switch>
-          <Route
-            path="/"
-            exact
-            render={() => (
-              <Homepage userState={userState} searchState={searchState} />
-            )}
-          />
-          <Route
-            path="/main"
-            exact
-            render={() => (
-              <Mainpage userState={userState} searchState={searchState} />
-            )}
-          />
-          <Route path="/" render={() => <div>404</div>} />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <Homepage userState={userState} searchState={searchState} />
+          )}
+        />
+        <Route
+          path="/main"
+          render={() => (
+            <Main userState={userState} searchState={searchState} />
+          )}
+        />
+        <Route path="/" render={() => <div>404</div>} />
+      </Switch>
     </div>
   );
 }

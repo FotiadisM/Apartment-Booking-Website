@@ -32,6 +32,35 @@ function ListingsTab({ listings, setCurrList }) {
           );
         })}
       </div>
+      <nav className="mt-4 float-right">
+        <ul className="pagination">
+          <li className="page-item">
+            <div className="page-link" style={{ cursor: "pointer" }}>
+              <span aria-hidden="true">&laquo;</span>
+            </div>
+          </li>
+          <li className="page-item">
+            <div className="page-link" style={{ cursor: "pointer" }}>
+              1
+            </div>
+          </li>
+          <li className="page-item">
+            <div className="page-link" style={{ cursor: "pointer" }}>
+              2
+            </div>
+          </li>
+          <li className="page-item">
+            <div className="page-link" style={{ cursor: "pointer" }}>
+              3
+            </div>
+          </li>
+          <li className="page-item">
+            <div className="page-link" style={{ cursor: "pointer" }}>
+              <span aria-hidden="true">&raquo;</span>
+            </div>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }

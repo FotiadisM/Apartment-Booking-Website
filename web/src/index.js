@@ -6,10 +6,13 @@ import App from "./Containers/App/App";
 import * as serviceWorker from "./serviceWorker";
 
 import "./index.css";
+import { HashRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <HashRouter>
+      <App />
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );
