@@ -1,13 +1,29 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
+const changeTab = (history, url, id) => {
+  let btns = document.getElementsByClassName("tabButtons");
+
+  for (let i = 0; i < btns.length; i++) {
+    btns[i].classList.remove("active");
+  }
+
+  let btn = document.getElementById(id);
+  btn.classList.add("active");
+
+  history.push(`/main/${url}`);
+};
+
 function Icons({ user }) {
   let history = useHistory();
-  console.log(history);
 
   return (
     <div className="Icons">
-      <button className="btn btn-outline-dark rounded rounded-lg py-1 px-2 active">
+      <button
+        id="searchTab"
+        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 active tabButtons"
+        onClick={() => changeTab(history, "", "searchTab")}
+      >
         <svg
           width="1em"
           height="1em"
@@ -27,7 +43,11 @@ function Icons({ user }) {
         </svg>
       </button>
       {(user.user.role === "host" || user.user.role === "admin") && (
-        <button className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2">
+        <button
+          id="addTab"
+          className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+          onClick={() => changeTab(history, "new", "addTab")}
+        >
           <svg
             width="1em"
             height="1em"
@@ -51,7 +71,11 @@ function Icons({ user }) {
           </svg>
         </button>
       )}
-      <button className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2">
+      <button
+        id="archiveTab"
+        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+        onClick={() => changeTab(history, "archive", "archiveTab")}
+      >
         <svg
           width="1em"
           height="1em"
@@ -66,7 +90,11 @@ function Icons({ user }) {
           />
         </svg>
       </button>
-      <button className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2">
+      <button
+        id="adminTab"
+        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+        onClick={() => changeTab(history, "admin", "adminTab")}
+      >
         <svg
           width="1em"
           height="1em"
@@ -82,8 +110,9 @@ function Icons({ user }) {
         </svg>
       </button>
       <button
-        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2"
-        onClick={() => history.push("settings")}
+        id="settingsTab"
+        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+        onClick={() => changeTab(history, "settings", "settingsTab")}
       >
         <svg
           width="1em"

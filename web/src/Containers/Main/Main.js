@@ -2,9 +2,10 @@ import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import NavBar from "../../Components/NavBar/NavBar";
 import SearchTab from "../../Components/SearchTab/SearchTab";
-import SettingsTab from "../../Components/SettingsTab/SettingsTab";
-import ArchiveTab from "../../Components/ArchiveTab/ArchiveTab";
 import AddTab from "../../Components/AddTab/AddTab";
+import ArchiveTab from "../../Components/ArchiveTab/ArchiveTab";
+import AdminTab from "../../Components/AdminTab/AdminTab";
+import SettingsTab from "../../Components/SettingsTab/SettingsTab";
 
 function Main({ userState, searchState }) {
   let { path } = useRouteMatch();
@@ -22,13 +23,16 @@ function Main({ userState, searchState }) {
           <Route exact path={path}>
             <SearchTab userState={userState} searchState={searchState} />
           </Route>
-          <Route path={`${path}/new`}>
+          <Route exact path={`${path}/new`}>
             <AddTab />
           </Route>
-          <Route path={`${path}/archive`}>
+          <Route exact path={`${path}/archive`}>
             <ArchiveTab />
           </Route>
-          <Route path={`${path}/settings`}>
+          <Route exact path={`${path}/admin`}>
+            <AdminTab />
+          </Route>
+          <Route exact path={`${path}/settings`}>
             <SettingsTab />
           </Route>
         </Switch>
