@@ -33,6 +33,7 @@ const array = [
         userID: 1,
         userName: "DIT terminator",
         score: 5,
+        date: "22/07/2019",
         text:
           "Yes yes nice apartment, yes very satisfied, I recomend yes yes, luckily didn't find any DIT students yes yes",
       },
@@ -41,6 +42,7 @@ const array = [
         userID: 3,
         userName: "Satoshi nakamoto",
         score: 4,
+        date: "22/07/2019",
         text: "Cool place",
       },
     ],
@@ -74,6 +76,7 @@ const array = [
         userID: 1,
         userName: "DIT terminator",
         score: 5,
+        date: "22/07/2019",
         text:
           "Yes yes nice apartment, yes very satisfied, I recomend yes yes, luckily didn't find any DIT students yes yes",
       },
@@ -81,6 +84,7 @@ const array = [
         id: 2,
         userID: 3,
         userName: "Satoshi nakamoto",
+        date: "22/07/2019",
         score: 4,
         text: "Cool place",
       },

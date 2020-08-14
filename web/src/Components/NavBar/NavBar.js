@@ -21,7 +21,7 @@ function NavBAr({ userState }) {
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
           <ul className="navbar-nav mr-auto mb-2 mb-lg-0 mb-0">
             <li className="nav-item">
-              <div className="nav-link active" style={{ cursor: "pointer" }}>
+              <div className="nav-link" style={{ cursor: "pointer" }}>
                 About
               </div>
             </li>
@@ -35,7 +35,7 @@ function NavBAr({ userState }) {
             {userState[0].isLogedIn ? (
               <LogedIn userState={userState} />
             ) : (
-              <LogedOut userState={userState} />
+              <LogedOut />
             )}
           </div>
         </div>

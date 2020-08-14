@@ -27,13 +27,13 @@ function Main({ userState, searchState }) {
             <AddTab />
           </Route>
           <Route exact path={`${path}/archive`}>
-            <ArchiveTab />
+            <ArchiveTab userState={userState} />
           </Route>
           <Route exact path={`${path}/admin`}>
-            <AdminTab />
+            <AdminTab userState={userState} />
           </Route>
           <Route exact path={`${path}/settings`}>
-            <SettingsTab />
+            <SettingsTab userState={userState} />
           </Route>
         </Switch>
       </div>

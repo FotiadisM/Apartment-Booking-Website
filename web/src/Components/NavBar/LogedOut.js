@@ -1,8 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-function LogedOut({ userState }) {
-  const [user, setUser] = userState;
+function LogedOut() {
   let history = useHistory();
 
   return (
@@ -10,8 +9,7 @@ function LogedOut({ userState }) {
       <button
         className="mr-2 btn btn-outline-primary px-3"
         onClick={() => {
-          setUser({ ...user, isLogedIn: true });
-          history.push("/main");
+          history.push("/signpage");
         }}
       >
         Log In

@@ -22,6 +22,9 @@ function Icons({ user }) {
       <button
         id="searchTab"
         className="btn btn-outline-dark rounded rounded-lg py-1 px-2 active tabButtons"
+        data-toggle="tooltip"
+        data-placement="bottom"
+        title="Search for a place"
         onClick={() => changeTab(history, "", "searchTab")}
       >
         <svg
@@ -46,6 +49,9 @@ function Icons({ user }) {
         <button
           id="addTab"
           className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Add new listing"
           onClick={() => changeTab(history, "new", "addTab")}
         >
           <svg
@@ -74,6 +80,9 @@ function Icons({ user }) {
       <button
         id="archiveTab"
         className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+        data-toggle="tooltip"
+        data-placement="bottom"
+        title="Archive"
         onClick={() => changeTab(history, "archive", "archiveTab")}
       >
         <svg
@@ -90,28 +99,36 @@ function Icons({ user }) {
           />
         </svg>
       </button>
-      <button
-        id="adminTab"
-        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
-        onClick={() => changeTab(history, "admin", "adminTab")}
-      >
-        <svg
-          width="1em"
-          height="1em"
-          viewBox="0 0 16 16"
-          className="bi bi-option"
-          fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
+      {user.user.role === "admin" && (
+        <button
+          id="adminTab"
+          className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Admin page"
+          onClick={() => changeTab(history, "admin", "adminTab")}
         >
-          <path
-            fillRule="evenodd"
-            d="M1 2.5a.5.5 0 0 1 .5-.5h3.797a.5.5 0 0 1 .439.26L11 13h3.5a.5.5 0 0 1 0 1h-3.797a.5.5 0 0 1-.439-.26L5 3H1.5a.5.5 0 0 1-.5-.5zm10 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"
-          />
-        </svg>
-      </button>
+          <svg
+            width="1em"
+            height="1em"
+            viewBox="0 0 16 16"
+            className="bi bi-option"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              d="M1 2.5a.5.5 0 0 1 .5-.5h3.797a.5.5 0 0 1 .439.26L11 13h3.5a.5.5 0 0 1 0 1h-3.797a.5.5 0 0 1-.439-.26L5 3H1.5a.5.5 0 0 1-.5-.5zm10 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"
+            />
+          </svg>
+        </button>
+      )}
       <button
         id="settingsTab"
         className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
+        data-toggle="tooltip"
+        data-placement="bottom"
+        title="Settings"
         onClick={() => changeTab(history, "settings", "settingsTab")}
       >
         <svg

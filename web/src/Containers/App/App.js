@@ -4,10 +4,11 @@ import { Switch, Route } from "react-router-dom";
 
 import Homepage from "../../Components/Homepage/Homepage";
 import Main from "../Main/Main";
+import SignPage from "../../Components/SignPage/SignPage";
 
 function App() {
   const userState = useState({
-    isLogedIn: false,
+    isLogedIn: true,
     access_token: "",
     user: {
       id: 0,
@@ -39,6 +40,7 @@ function App() {
             <Main userState={userState} searchState={searchState} />
           )}
         />
+        <Route exact path="/signpage" render={() => <SignPage />} />
         <Route path="/" render={() => <div>404</div>} />
       </Switch>
     </div>
