@@ -38,42 +38,48 @@ function InfoTab({ currList }) {
               <div>
                 <button
                   className="btn btn-outline-primary"
-                  type="button"
+                  id="collapseReviewBtn"
                   data-toggle="collapse"
                   data-target="#collapseReview"
                   aria-expanded="false"
                   aria-controls="collapseReview"
+                  onClick={() => {
+                    const el = document.getElementById("collapseReviewBtn");
+                    el.classList.toggle("active");
+                  }}
                 >
                   Add a review
                 </button>
                 <button className="btn btn-primary ml-2">Book Now!</button>
               </div>
             </div>
-            <div className="collapse py-2 mt-2" id="collapseReview">
-              <textarea
-                className="form-control"
-                rows="4"
-                placeholder="Tell us what you think!"
-              ></textarea>
-              <div className="d-flex justify-content-between mt-2 mx-1">
-                <div className="btn-group btn-group-sm" role="group">
-                  <button type="button" className="btn btn-outline-primary">
-                    1
-                  </button>
-                  <button type="button" className="btn btn-outline-primary">
-                    2
-                  </button>
-                  <button type="button" className="btn btn-outline-primary">
-                    3
-                  </button>
-                  <button type="button" className="btn btn-outline-primary">
-                    4
-                  </button>
-                  <button type="button" className="btn btn-outline-primary">
-                    5
-                  </button>
+            <div className="collapse" id="collapseReview">
+              <div className="py-2 mt-2">
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  placeholder="Tell us what you think!"
+                ></textarea>
+                <div className="d-flex justify-content-between mt-2 mx-1">
+                  <div className="btn-group btn-group-sm" role="group">
+                    <button type="button" className="btn btn-outline-primary">
+                      1
+                    </button>
+                    <button type="button" className="btn btn-outline-primary">
+                      2
+                    </button>
+                    <button type="button" className="btn btn-outline-primary">
+                      3
+                    </button>
+                    <button type="button" className="btn btn-outline-primary">
+                      4
+                    </button>
+                    <button type="button" className="btn btn-outline-primary">
+                      5
+                    </button>
+                  </div>
+                  <button className="btn btn-primary">Submit</button>
                 </div>
-                <button className="btn btn-primary">Submit</button>
               </div>
             </div>
             <hr className="mx-4 my-3" />
