@@ -4,7 +4,7 @@ function AddTab() {
   return (
     <div className="AddTab mt-2 mb-3">
       <div className="container" style={{ width: "40%" }}>
-        <h1 className="mb-1 text-primary">Add a new Listing</h1>
+        <h1 className="mb-1 text-primary">Create a new Listing</h1>
         <hr
           className="bg-primary mt-0"
           style={{ height: ".2rem", opacity: "1" }}
@@ -13,74 +13,136 @@ function AddTab() {
           <div className="row mb-2">
             <div className="col">
               <label
-                htmlFor="fNameSettings"
+                htmlFor="streetAdd"
                 className="form-label text-primary mb-1"
               >
-                First Name
+                Street
               </label>
-              <input type="text" className="form-control" id="fNameSettings" />
+              <input type="text" className="form-control" id="streetAddTab" />
             </div>
             <div className="col">
               <label
-                htmlFor="lNameSettings"
+                htmlFor="numberAdd"
                 className="form-label text-primary mb-1"
               >
-                Last Name
+                Number
               </label>
-              <input type="text" className="form-control" id="lNameSettings" />
+              <input type="text" className="form-control" id="numberAdd" />
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div className="col">
+              <label
+                htmlFor="neighbourhoudAdd"
+                className="form-label text-primary mb-1"
+              >
+                Neighbourhood
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="neighbourhoudAdd"
+              />
+            </div>
+            <div className="col">
+              <label
+                htmlFor="stateAdd"
+                className="form-label text-primary mb-1"
+              >
+                State
+              </label>
+              <input type="text" className="form-control" id="stateAdd" />
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div className="col">
+              <label
+                htmlFor="CountryAdd"
+                className="form-label text-primary mb-1"
+              >
+                Country
+              </label>
+              <input type="text" className="form-control" id="countryAdd" />
+            </div>
+            <div className="col">
+              <label
+                htmlFor="zipcodeAdd"
+                className="form-label text-primary mb-1"
+              >
+                Zipcode
+              </label>
+              <input type="text" className="form-control" id="zipcodeAdd" />
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div className="col">
+              <label
+                htmlFor="peopleAdd"
+                className="form-label text-primary mb-1"
+              >
+                People accommodating
+              </label>
+              <input type="text" className="form-control" id="peopleAdd" />
+            </div>
+            <div className="col">
+              <label htmlFor="bedsAdd" className="form-label text-primary mb-1">
+                Number of beds
+              </label>
+              <input type="text" className="form-control" id="bedsAdd" />
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div className="col">
+              <label
+                htmlFor="roomsAdd"
+                className="form-label text-primary mb-1"
+              >
+                Number of rooms
+              </label>
+              <input type="text" className="form-control" id="roomsAdd" />
+            </div>
+            <div className="col">
+              <label htmlFor="bathAdd" className="form-label text-primary mb-1">
+                Number of bathrooms
+              </label>
+              <input type="text" className="form-control" id="bathAdd" />
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div className="col">
+              <label
+                htmlFor="squareAdd"
+                className="form-label text-primary mb-1"
+              >
+                Square meters
+              </label>
+              <input type="text" className="form-control" id="squareAdd" />
+            </div>
+            <div className="col">
+              <label
+                htmlFor="priceAdd"
+                className="form-label text-primary mb-1"
+              >
+                Price per day
+              </label>
+              <input type="text" className="form-control" id="priceAdd" />
             </div>
           </div>
           <div className="mb-2">
-            <label
-              htmlFor="emailSettings"
-              className="form-label text-primary mb-1"
-            >
-              Email
+            <label htmlFor="descAdd" className="form-label text-primary mb-1">
+              Description
             </label>
-            <input type="email" className="form-control" id="emailSettings" />
+            <textarea className="form-control" rows="3" id="descAdd"></textarea>
           </div>
           <div className="mb-2">
-            <label
-              htmlFor="usernameSettings"
-              className="form-label text-primary mb-1"
-            >
-              Username
+            <label htmlFor="rulesAdd" className="form-label text-primary mb-1">
+              Rules
             </label>
-            <input
-              type="text"
+            <textarea
               className="form-control"
-              id="usernameSettings"
-              autoComplete="username"
-            />
-          </div>
-          <div className="mb-2">
-            <label
-              htmlFor="passwordSettings"
-              className="form-label text-primary mb-1"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              autoComplete="new-password"
-              className="form-control"
-              id="passwordSettings"
-            />
-          </div>
-          <div className="mb-2">
-            <label
-              htmlFor="telSettings"
-              className="form-label text-primary mb-1"
-            >
-              Telephone number
-            </label>
-            <input
-              type="tel"
-              pattern="[0-9]{10}"
-              autoComplete="new-password"
-              className="form-control"
-              id="telSettings"
-            />
+              rows="3"
+              id="rulesAdd"
+            ></textarea>
           </div>
           <div className="mt-4 d-flex justify-content-end">
             <button type="submit" className="btn btn-primary">
