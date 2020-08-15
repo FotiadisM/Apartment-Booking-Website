@@ -4,7 +4,7 @@ import NavBAr from "../NavBar/NavBar";
 
 function Homepage({ userState, searchState }) {
   let history = useHistory();
-  // const [search, setSearch] = searchState;
+  const [search, setSearch] = searchState;
 
   return (
     <div className="Homepage">
@@ -28,6 +28,14 @@ function Homepage({ userState, searchState }) {
               className="form-control"
               id="destination"
               placeholder="Where would you like to go?"
+              value={search.destination}
+              onChange={(e) => {
+                e.persist();
+                setSearch((prevSearch) => ({
+                  ...prevSearch,
+                  destination: e.target.value,
+                }));
+              }}
               required
             />
           </div>
@@ -40,6 +48,14 @@ function Homepage({ userState, searchState }) {
               className="form-control"
               id="from"
               placeholder="Add date"
+              value={search.from}
+              onChange={(e) => {
+                e.persist();
+                setSearch((prevSearch) => ({
+                  ...prevSearch,
+                  from: e.target.value,
+                }));
+              }}
               required
             />
           </div>
@@ -52,6 +68,14 @@ function Homepage({ userState, searchState }) {
               className="form-control"
               id="to"
               placeholder="Add date"
+              value={search.to}
+              onChange={(e) => {
+                e.persist();
+                setSearch((prevSearch) => ({
+                  ...prevSearch,
+                  to: e.target.value,
+                }));
+              }}
               required
             />
           </div>
@@ -60,8 +84,17 @@ function Homepage({ userState, searchState }) {
               type="number"
               className="form-control"
               placeholder="Add visitors"
-              required
+              min="1"
               max="7"
+              value={search.people}
+              onChange={(e) => {
+                e.persist();
+                setSearch((prevSearch) => ({
+                  ...prevSearch,
+                  people: e.target.value,
+                }));
+              }}
+              required
             />
           </div>
           <div className="col-6 mt-3">

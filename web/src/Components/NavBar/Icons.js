@@ -1,31 +1,25 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-const changeTab = (history, url, id) => {
-  let btns = document.getElementsByClassName("tabButtons");
-
-  for (let i = 0; i < btns.length; i++) {
-    btns[i].classList.remove("active");
-  }
-
-  let btn = document.getElementById(id);
-  btn.classList.add("active");
-
-  history.push(`/main/${url}`);
+const changeTab = (setTab, tabName) => {
+  setTab((prevTab) => ({ current: tabName, previous: prevTab.current }));
 };
 
-function Icons({ user }) {
+function Icons({ user, setTab }) {
   let history = useHistory();
 
   return (
     <div className="Icons">
       <button
         id="searchTab"
-        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 active tabButtons"
+        className="btn btn-outline-dark rounded rounded-lg py-1 px-2 tabButtons"
         data-toggle="tooltip"
         data-placement="bottom"
         title="Search for a place"
-        onClick={() => changeTab(history, "", "searchTab")}
+        onClick={() => {
+          changeTab(setTab, "searchTab");
+          history.push("/main");
+        }}
       >
         <svg
           width="1em"
@@ -52,7 +46,10 @@ function Icons({ user }) {
           data-toggle="tooltip"
           data-placement="bottom"
           title="Add new listing"
-          onClick={() => changeTab(history, "new", "addTab")}
+          onClick={() => {
+            changeTab(setTab, "addTab");
+            history.push("/main/new");
+          }}
         >
           <svg
             width="1em"
@@ -83,7 +80,10 @@ function Icons({ user }) {
         data-toggle="tooltip"
         data-placement="bottom"
         title="Archive"
-        onClick={() => changeTab(history, "archive", "archiveTab")}
+        onClick={() => {
+          changeTab(setTab, "archiveTab");
+          history.push("/main/archive");
+        }}
       >
         <svg
           width="1em"
@@ -106,7 +106,10 @@ function Icons({ user }) {
           data-toggle="tooltip"
           data-placement="bottom"
           title="Admin page"
-          onClick={() => changeTab(history, "admin", "adminTab")}
+          onClick={() => {
+            changeTab(setTab, "adminTab");
+            history.push("/main/admin");
+          }}
         >
           <svg
             width="1em"
@@ -129,7 +132,10 @@ function Icons({ user }) {
         data-toggle="tooltip"
         data-placement="bottom"
         title="Settings"
-        onClick={() => changeTab(history, "settings", "settingsTab")}
+        onClick={() => {
+          changeTab(setTab, "settingsTab");
+          history.push("/main/settings");
+        }}
       >
         <svg
           width="1em"

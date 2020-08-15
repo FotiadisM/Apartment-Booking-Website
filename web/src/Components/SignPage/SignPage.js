@@ -188,7 +188,7 @@ function SignPage() {
             </div>
             <div className="mt-4 d-flex justify-content-end">
               <button type="submit" className="btn btn-primary w-50">
-                Log In
+                Get Started
               </button>
             </div>
           </form>

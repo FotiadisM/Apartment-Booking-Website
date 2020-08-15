@@ -16,7 +16,7 @@ function ArchiveTab({ userState }) {
         </div>
       )}
       <div className="flex-grow-1 mb-4">
-        <h5 className="mb-1">Pending Bookings</h5>
+        <h5 className="mb-1">Active Bookings</h5>
         <hr className="mt-0" />
         <div className="row">
           <div className="col-auto">

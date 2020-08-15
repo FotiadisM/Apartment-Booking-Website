@@ -2,7 +2,7 @@ import React from "react";
 import LogedOut from "./LogedOut";
 import LogedIn from "./LogedIn";
 
-function NavBAr({ userState }) {
+function NavBAr({ userState, setTab }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
       <div className="container">
@@ -33,7 +33,7 @@ function NavBAr({ userState }) {
           </ul>
           <div>
             {userState[0].isLogedIn ? (
-              <LogedIn userState={userState} />
+              <LogedIn userState={userState} setTab={setTab} />
             ) : (
               <LogedOut />
             )}

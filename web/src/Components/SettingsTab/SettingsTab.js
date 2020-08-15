@@ -9,7 +9,7 @@ function SettingsPage() {
           className="bg-primary mt-0"
           style={{ height: ".2rem", opacity: "1" }}
         />
-        <div className="border border-primary rounded-lg py-3 px-4">
+        <form className="border border-primary rounded-lg py-3 px-4">
           <div className="row mb-2">
             <div className="col">
               <label
@@ -87,7 +87,7 @@ function SettingsPage() {
               Save changes
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

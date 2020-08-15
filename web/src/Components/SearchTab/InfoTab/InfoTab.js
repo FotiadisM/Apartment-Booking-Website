@@ -44,7 +44,7 @@ function InfoTab({ currList }) {
                   aria-expanded="false"
                   aria-controls="collapseReview"
                 >
-                  Rate
+                  Add a review
                 </button>
                 <button className="btn btn-primary ml-2">Book Now!</button>
               </div>

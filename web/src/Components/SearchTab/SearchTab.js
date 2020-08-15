@@ -128,8 +128,8 @@ const array = [
   },
 ];
 
-function SearchTab({ userState, searchState }) {
-  const [search, setSearch] = searchState;
+function SearchTab({ searchState }) {
+  const [search] = searchState;
   const [listings, setListings] = useState([]);
   const [currList, setCurrList] = useState({});
 
@@ -141,7 +141,7 @@ function SearchTab({ userState, searchState }) {
   return (
     <div className="SearchTab">
       <div className="container">
-        <SearchBar setSearch={setSearch} />
+        <SearchBar searchState={searchState} />
         <div className="row mt-1">
           <div className="col-6">
             <ListingsTab listings={listings} setCurrList={setCurrList} />

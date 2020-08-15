@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import NavBar from "../../Components/NavBar/NavBar";
 import SearchTab from "../../Components/SearchTab/SearchTab";
@@ -9,11 +9,25 @@ import SettingsTab from "../../Components/SettingsTab/SettingsTab";
 
 function Main({ userState, searchState }) {
   let { path } = useRouteMatch();
+  const [tab, setTab] = useState({
+    current: "searchTab",
+    previous: "",
+  });
+
+  useEffect(() => {
+    if (tab.previous !== "") {
+      const prevEl = document.getElementById(tab.previous);
+      prevEl.classList.remove("active");
+    }
+
+    const el = document.getElementById(tab.current);
+    el.classList.add("active");
+  }, [tab]);
 
   return (
     <div className="Main d-flex flex-column" style={{ height: "100%" }}>
       <div className="flex-grow-0 flex-shrink-1" style={{ flexBasis: "auto" }}>
-        <NavBar userState={userState} />
+        <NavBar userState={userState} setTab={setTab} />
       </div>
       <div
         className="my-4 flex-grow-1 flex-shrink-1"
@@ -21,7 +35,7 @@ function Main({ userState, searchState }) {
       >
         <Switch>
           <Route exact path={path}>
-            <SearchTab userState={userState} searchState={searchState} />
+            <SearchTab searchState={searchState} />
           </Route>
           <Route exact path={`${path}/new`}>
             <AddTab />

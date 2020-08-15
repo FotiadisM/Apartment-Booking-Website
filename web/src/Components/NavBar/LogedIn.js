@@ -2,14 +2,14 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import Icons from "./Icons";
 
-function LogedIn({ userState }) {
+function LogedIn({ userState, setTab }) {
   const [user, setUser] = userState;
   let history = useHistory();
 
   return (
     <div className="LogedIn d-flex">
       <div className="my-auto">
-        <Icons user={user} />
+        <Icons user={user} setTab={setTab} />
       </div>
       <div className="dropdown ml-2">
         <button
@@ -26,7 +26,7 @@ function LogedIn({ userState }) {
             <div
               className="dropdown-item"
               onClick={() => {
-                setUser({ ...user, isLogedIn: false });
+                setUser((user) => ({ ...user, isLogedIn: false }));
                 history.push("/");
               }}
             >
