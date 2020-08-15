@@ -30,7 +30,6 @@ function SignPage() {
                 autoComplete="username"
                 className="form-control"
                 id="userNameSignIn"
-                aria-describedby="username"
               />
             </div>
             <div className="mb-3">
@@ -42,7 +41,15 @@ function SignPage() {
                 autoComplete="current-password"
                 className="form-control"
                 id="passwordSignIn"
+                aria-describedby="forgotPassword"
               />
+              <div
+                id="forgotPassword"
+                className="form-text text-white"
+                style={{ cursor: "pointer" }}
+              >
+                Forgot password?
+              </div>
             </div>
             <div className="mt-4 d-flex justify-content-end">
               <button type="submit" className="btn btn-light w-50">
@@ -124,7 +131,7 @@ function SignPage() {
                 id="passwordSignUp"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="repeatPasswordSignUp"
                 className="form-label text-primary mb-1"
@@ -136,6 +143,21 @@ function SignPage() {
                 autoComplete="new-password"
                 className="form-control mb-1"
                 id="repeatPasswordSignUp"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="telSignUp"
+                className="form-label text-primary mb-1"
+              >
+                Telephone number
+              </label>
+              <input
+                type="tel"
+                pattern="[0-9]{10}"
+                autoComplete="new-password"
+                className="form-control"
+                id="telSignUp"
               />
             </div>
             <div className="d-flex justify-content-around">

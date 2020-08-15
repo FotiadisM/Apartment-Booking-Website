@@ -12,7 +12,7 @@ function App() {
     access_token: "",
     user: {
       id: 0,
-      name: "Maria Trelomaria",
+      name: "Marios LOL",
       role: "admin",
     },
   });
