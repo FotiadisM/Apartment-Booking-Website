@@ -27,21 +27,18 @@ function App() {
   return (
     <div className="App" style={{ height: "100%" }}>
       <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <Homepage userState={userState} searchState={searchState} />
-          )}
-        />
-        <Route
-          path="/main"
-          render={() => (
-            <Main userState={userState} searchState={searchState} />
-          )}
-        />
-        <Route exact path="/signpage" render={() => <SignPage />} />
-        <Route path="/" render={() => <div>404</div>} />
+        <Route exact path="/">
+          <Homepage userState={userState} searchState={searchState} />
+        </Route>
+        <Route path="/main">
+          <Main userState={userState} searchState={searchState} />
+        </Route>
+        <Route exact path="/signpage">
+          <SignPage />
+        </Route>
+        <Route path="/">
+          <div>404</div>
+        </Route>
       </Switch>
     </div>
   );

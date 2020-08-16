@@ -29,7 +29,8 @@ func main() {
 	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
 
 	uh := handlers.NewUserHandler(l)
-	sd := r.PathPrefix("/user").Subrouter()
+	sd := r.PathPrefix("/users").Subrouter()
+	sd.HandleFunc("", uh.GetUsers).Methods("GET")
 	sd.HandleFunc("", uh.AddUser).Methods("POST")
 	sd.HandleFunc("/{id}", uh.GetUser).Methods("GET")
 	sd.HandleFunc("/{id}", uh.DeleteUser).Methods("DELETE")
@@ -37,7 +38,7 @@ func main() {
 	sd.Use(ah.TokenAuthMiddleware)
 
 	lh := handlers.NewListingHandler(l)
-	ls := r.PathPrefix("/listing").Subrouter()
+	ls := r.PathPrefix("/listings").Subrouter()
 	ls.HandleFunc("", lh.AddListing).Methods("POST")
 	ls.HandleFunc("/{id}", lh.GetListing).Methods("GET")
 	ls.HandleFunc("/{id}", lh.UpdateListing).Methods("PUT")
@@ -45,7 +46,7 @@ func main() {
 	ls.Use(ah.TokenAuthMiddleware)
 
 	rh := handlers.NewReviewHandler(l)
-	rs := r.PathPrefix("/review").Subrouter()
+	rs := r.PathPrefix("/reviews").Subrouter()
 	rs.HandleFunc("", rh.AddReview).Methods("POST")
 	rs.HandleFunc("/{id}", rh.GetReview).Methods("GET")
 	rs.HandleFunc("/{id}", rh.UpdateReview).Methods("PUT")

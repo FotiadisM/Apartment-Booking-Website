@@ -41,8 +41,37 @@ function ListingsTab({ listings, setCurrList }) {
         </button>
       </div>
       <div className="collapse" id="collapseFilter">
-        <div className="border border-primary rounded-lg px-3 py-2 mb-3">
-          hello
+        <div className="border border-primary rounded-lg px-3 py-3 mb-3">
+          <div className="d-flex mb-2">
+            <p className="mr-4 my-auto" style={{ width: "15%" }}>
+              Sort By:
+            </p>
+            <select
+              className="form-select"
+              defaultValue="0"
+              aria-label="Sort By"
+            >
+              <option value="0">Price, lowest to hightest</option>
+              <option value="1">Price, hightest to lowest</option>
+              <option value="2">Popularity</option>
+              <option value="3">Rating</option>
+            </select>
+          </div>
+          <div className="d-flex">
+            <p className="mr-4 my-auto" style={{ width: "15%" }}>
+              Type:
+            </p>
+            <select
+              className="form-select"
+              defaultValue="0"
+              aria-label="Sort By"
+            >
+              <option value="0">All</option>
+              <option value="1">Apartment</option>
+              <option value="2">Private room</option>
+              <option value="3">Shared room</option>
+            </select>
+          </div>
         </div>
       </div>
       <div className="row gx-0 gy-3">

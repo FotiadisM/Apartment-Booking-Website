@@ -13,12 +13,19 @@ function Card({ listing, setCurrList }) {
         />
       </div>
       <div className="col">
-        <div className="d-flex flex-column justify-content-between h-100 p-3">
+        <div className="d-flex flex-column justify-content-between h-100 p-2 pl-3">
           <div>
             <h5>
               {listing.street}, {listing.neighbourhood}
             </h5>
-            <h6>Rating: {listing.review_avrg}</h6>
+            <div className="d-flex">
+              <h6 className="mr-2 mb-0">Reviews: {listing.review_num}</h6>
+              <h6 className="mb-0">Rating: {listing.review_avrg}</h6>
+            </div>
+            <div className="d-flex">
+              <p className="mr-2 mb-0">Type: {listing.type}</p>
+              <p className="mb-0">Beds: {listing.bed_num}</p>
+            </div>
           </div>
           <div className="d-flex justify-content-between align-items-end">
             <h5 className="">From {listing.price_day}$ per day</h5>

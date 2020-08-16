@@ -21,6 +21,11 @@ func NewUserHandler(l *log.Logger) *UserHandler {
 	return &UserHandler{l}
 }
 
+// GetUsers is a HandleFunc that return all users
+func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
+
+}
+
 // GetUser is a HandleFunc that returns a user
 func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

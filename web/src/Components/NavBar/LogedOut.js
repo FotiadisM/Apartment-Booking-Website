@@ -14,7 +14,14 @@ function LogedOut() {
       >
         Log In
       </button>
-      <button className="ml-2 btn btn-primary px-3">Sign Up</button>
+      <button
+        className="ml-2 btn btn-primary px-3"
+        onClick={() => {
+          history.push("/signpage");
+        }}
+      >
+        Sign Up
+      </button>
     </div>
   );
 }
