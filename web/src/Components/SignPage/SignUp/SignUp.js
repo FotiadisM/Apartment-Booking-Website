@@ -1,5 +1,16 @@
 import React from "react";
 
+const onSignUp = (e) => {
+  const form = document.getElementById("signUpForm");
+
+  if (!form.checkValidity()) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  form.classList.add("was-validated");
+};
+
 function SignUp() {
   return (
     <div className="SignUp">
@@ -8,7 +19,12 @@ function SignUp() {
         className="bg-primary mt-0"
         style={{ height: ".2rem", opacity: "1" }}
       />
-      <form className="px-4 py-3 border border-primary rounded-lg">
+      <form
+        className="px-4 py-3 border border-primary rounded-lg needs-validation shadow"
+        id="signUpForm"
+        onSubmit={(e) => onSignUp(e)}
+        noValidate={true}
+      >
         <div className="row mb-2">
           <div className="col">
             <label
@@ -17,7 +33,12 @@ function SignUp() {
             >
               First Name
             </label>
-            <input type="text" className="form-control" id="fNameSignUp" />
+            <input
+              type="text"
+              className="form-control"
+              id="fNameSignUp"
+              required={true}
+            />
           </div>
           <div className="col">
             <label
@@ -26,14 +47,24 @@ function SignUp() {
             >
               Last Name
             </label>
-            <input type="text" className="form-control" id="lNameSignUp" />
+            <input
+              type="text"
+              className="form-control"
+              id="lNameSignUp"
+              required={true}
+            />
           </div>
         </div>
         <div className="mb-2">
           <label htmlFor="emailSignUp" className="form-label text-primary mb-1">
             Email
           </label>
-          <input type="email" className="form-control" id="emailSignUp" />
+          <input
+            type="email"
+            className="form-control"
+            id="emailSignUp"
+            required={true}
+          />
         </div>
         <div className="mb-2">
           <label
@@ -47,6 +78,7 @@ function SignUp() {
             className="form-control"
             id="usernameSignUp"
             autoComplete="username"
+            required={true}
           />
         </div>
         <div className="mb-2">
@@ -61,6 +93,7 @@ function SignUp() {
             autoComplete="new-password"
             className="form-control"
             id="passwordSignUp"
+            required={true}
           />
         </div>
         <div className="mb-2">
@@ -75,6 +108,7 @@ function SignUp() {
             autoComplete="new-password"
             className="form-control mb-1"
             id="repeatPasswordSignUp"
+            required={true}
           />
         </div>
         <div className="mb-4">
@@ -87,6 +121,7 @@ function SignUp() {
             autoComplete="new-password"
             className="form-control"
             id="telSignUp"
+            required={true}
           />
         </div>
         <div className="d-flex justify-content-around">
@@ -94,11 +129,12 @@ function SignUp() {
             <input
               className="form-check-input"
               type="radio"
-              name="exampleRadios"
-              id="exampleRadios1"
-              value="option1"
+              name="radioSignUp"
+              id="userRadioSignUp"
+              value="user"
+              required={true}
             />
-            <label className="form-check-label" htmlFor="exampleRadios1">
+            <label className="form-check-label" htmlFor="userRadioSignUp">
               User
             </label>
           </div>
@@ -106,11 +142,12 @@ function SignUp() {
             <input
               className="form-check-input"
               type="radio"
-              name="exampleRadios"
-              id="exampleRadios2"
-              value="option2"
+              name="radioSignUp"
+              id="hostRadioSignUp"
+              value="host"
+              required={true}
             />
-            <label className="form-check-label" htmlFor="exampleRadios2">
+            <label className="form-check-label" htmlFor="hostRadioSignUp">
               Host
             </label>
           </div>

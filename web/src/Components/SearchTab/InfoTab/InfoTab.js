@@ -12,7 +12,7 @@ function InfoTab({ currList }) {
 
         <div>
           <Carousel />
-          <div className="border rounded rounded-lg p-3">
+          <div className="border rounded-bottom p-3 shadow">
             <h4>
               {currList.street}, {currList.neighbourhood} - {currList.city}
             </h4>

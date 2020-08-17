@@ -26,13 +26,8 @@ function Main({ userState, searchState }) {
 
   return (
     <div className="Main d-flex flex-column" style={{ height: "100%" }}>
-      <div className="flex-grow-0 flex-shrink-1" style={{ flexBasis: "auto" }}>
-        <NavBar userState={userState} setTab={setTab} />
-      </div>
-      <div
-        className="my-4 flex-grow-1 flex-shrink-1"
-        style={{ flexBasis: "auto" }}
-      >
+      <NavBar userState={userState} setTab={setTab} />
+      <div className="my-4 flex-grow-1">
         <Switch>
           <Route exact path={path}>
             <SearchTab searchState={searchState} />
@@ -51,11 +46,8 @@ function Main({ userState, searchState }) {
           </Route>
         </Switch>
       </div>
-      <div
-        className="flex-grow-0 flex-shrink-0 bg-light"
-        style={{ flexBasis: "120px" }}
-      >
-        footer
+      <div className="flex-shrink-0 bg-light" style={{ flexBasis: "120px" }}>
+        <h4 className="text-center">Footer</h4>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ function SearchBar({ searchState }) {
   const [search, setSearch] = searchState;
 
   return (
-    <form className="row rounded needs-validation g-2" noValidate>
+    <form className="row rounded needs-validation g-2" noValidate={true}>
       <div className="col-sm-4">
         <input
           type="text"
@@ -19,7 +19,7 @@ function SearchBar({ searchState }) {
               destination: e.target.value,
             }));
           }}
-          required
+          required={true}
         />
       </div>
       <div className="col-sm-2">
@@ -36,7 +36,7 @@ function SearchBar({ searchState }) {
               from: e.target.value,
             }));
           }}
-          required
+          required={true}
         />
       </div>
       <div className="col-sm-2">
@@ -53,7 +53,7 @@ function SearchBar({ searchState }) {
               to: e.target.value,
             }));
           }}
-          required
+          required={true}
         />
       </div>
       <div className="col-sm-2">
@@ -71,7 +71,7 @@ function SearchBar({ searchState }) {
               people: e.target.value,
             }));
           }}
-          required
+          required={true}
         />
       </div>
       <div className="col-sm-2">

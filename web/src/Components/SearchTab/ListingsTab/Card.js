@@ -3,7 +3,7 @@ import room from "../../../assets/room.jpg";
 
 function Card({ listing, setCurrList }) {
   return (
-    <div className="Card row g-0 border rounded-lg">
+    <div className="Card row g-0 border rounded-lg shadow-sm">
       <div className="col-sm-4">
         <img
           className="rounded-left rounded-lg"

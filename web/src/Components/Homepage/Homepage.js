@@ -16,8 +16,9 @@ function Homepage({ userState, searchState }) {
         </h4>
         <hr />
         <form
-          className="row border rounded p-4 mt-4 needs-validation"
-          noValidate
+          className="row border rounded p-4 mt-4 needs-validation shadow"
+          onSubmit={() => history.push("/main")}
+          noValidate={true}
         >
           <div className="col-12 mb-2">
             <label htmlFor="destination" className="form-label">
@@ -36,7 +37,7 @@ function Homepage({ userState, searchState }) {
                   destination: e.target.value,
                 }));
               }}
-              required
+              required={true}
             />
           </div>
           <div className="col-sm-6">
@@ -56,7 +57,7 @@ function Homepage({ userState, searchState }) {
                   from: e.target.value,
                 }));
               }}
-              required
+              required={true}
             />
           </div>
           <div className="col-sm-6">
@@ -76,7 +77,7 @@ function Homepage({ userState, searchState }) {
                   to: e.target.value,
                 }));
               }}
-              required
+              required={true}
             />
           </div>
           <div className="col-6 mt-3">
@@ -94,15 +95,11 @@ function Homepage({ userState, searchState }) {
                   people: e.target.value,
                 }));
               }}
-              required
+              required={true}
             />
           </div>
           <div className="col-6 mt-3">
-            <button
-              type="submit"
-              className="form-control btn-primary"
-              onClick={() => history.push("/main")}
-            >
+            <button type="submit" className="form-control btn-primary">
               Search
             </button>
           </div>

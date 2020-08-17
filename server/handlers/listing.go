@@ -18,6 +18,11 @@ func NewListingHandler(l *log.Logger) *ListingHandler {
 	return &ListingHandler{l}
 }
 
+// GetListings is a HandleFunct that returns all listings
+func (h *ListingHandler) GetListings(w http.ResponseWriter, r *http.Request) {
+
+}
+
 // GetListing is a HandleFunct that returns a listing
 func (h *ListingHandler) GetListing(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("getUser"))
