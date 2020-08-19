@@ -15,7 +15,7 @@ function Icons({ user, setTab }) {
         className="btn btn-outline-dark rounded rounded-lg py-1 px-2 tabButtons"
         data-toggle="tooltip"
         data-placement="bottom"
-        title="Search for a place"
+        title="Search"
         onClick={() => {
           changeTab(setTab, "searchTab");
           history.push("/main");
@@ -45,7 +45,7 @@ function Icons({ user, setTab }) {
           className="btn btn-outline-dark rounded rounded-lg py-1 px-2 ml-2 tabButtons"
           data-toggle="tooltip"
           data-placement="bottom"
-          title="Add new listing"
+          title="Create a new listing"
           onClick={() => {
             changeTab(setTab, "addTab");
             history.push("/main/new");

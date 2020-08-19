@@ -11,7 +11,7 @@ function SignPage() {
       >
         <div
           style={{
-            width: "40%",
+            width: "55%",
             position: "absolute",
             left: "50%",
             top: "50%",
@@ -24,6 +24,7 @@ function SignPage() {
       <div className="w-50" style={{ position: "relative" }}>
         <div
           style={{
+            width: "60%",
             position: "absolute",
             left: "50%",
             top: "50%",

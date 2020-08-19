@@ -1,22 +1,16 @@
 package auth
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/FotiadisM/homebnb/server/modules"
-	"github.com/FotiadisM/homebnb/server/storage"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -35,103 +29,9 @@ func NewAuth(l *log.Logger) *Auth {
 	return &Auth{l}
 }
 
-// Login authenticates user and returns access and refresh tokens
-func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
-	var li map[string]interface{}
-
-	err := json.NewDecoder(r.Body).Decode(&li)
-	if err != nil {
-		a.l.Println(err)
-		http.Error(w, "Error decoding json", http.StatusBadRequest)
-		return
-	}
-
-	l, err := storage.GetLogin(li["user_name"].(string))
-	if err != nil {
-		if err.Error() == storage.ErrNoDocument {
-			http.Error(w, "Wrong credentials", http.StatusUnauthorized)
-			return
-		}
-		a.l.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(l.Password), []byte(li["user_password"].(string)))
-	if err != nil {
-		a.l.Println(err)
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	tokens, err := createTokens(l.UserID, l.Role)
-
-	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(tokens)
-	if err != nil {
-		a.l.Println("Error encoding JSON", err)
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-}
-
 // Register registers a new user and retturn accesss and refresh tokens and the newly created user
 func (a *Auth) Register(w http.ResponseWriter, r *http.Request) {
 
-	buf, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.l.Println(err)
-	}
-	rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
-	rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
-
-	u := modules.User{}
-
-	err = json.NewDecoder(rdr1).Decode(&u)
-	if err != nil {
-		a.l.Println(err)
-		http.Error(w, "Error decoding json", http.StatusBadRequest)
-		return
-	}
-
-	id, err := storage.AddUser(u)
-	if err != nil {
-		if err.Error() == storage.ErrExists {
-			w.Write([]byte("Username is taken"))
-			return
-		}
-		a.l.Println("Error inseting user in the database", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	l := modules.LoginInfo{}
-	err = json.NewDecoder(rdr2).Decode(&l)
-	if err != nil {
-		a.l.Println(err)
-		http.Error(w, "Error decoding json", http.StatusBadRequest)
-		return
-	}
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(l.Password), bcrypt.DefaultCost)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	l.Password = string(hash)
-
-	l.UserID = id
-	err = storage.AddLogin(l)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	json.NewEncoder(w).Encode(id)
-	if err != nil {
-		a.l.Println("Error encoding JSON", err)
-		w.WriteHeader(http.StatusInternalServerError)
-	}
 }
 
 // TokenAuthMiddleware extracts token from header validates it
@@ -212,7 +112,8 @@ func createRefreshToken(userID string) (token string, err error) {
 	return
 }
 
-func createTokens(userID string, role string) (tokens map[string]string, err error) {
+// CreateTokens returns an authentication and a refresh token
+func CreateTokens(userID string, role string) (tokens map[string]string, err error) {
 	at, err := createAccessToken(userID, role)
 	if err != nil {
 		return

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const onSignIn = (e) => {
   const form = document.getElementById("signInForm");
@@ -6,12 +6,15 @@ const onSignIn = (e) => {
   if (!form.checkValidity()) {
     e.preventDefault();
     e.stopPropagation();
+    console.log("not okey");
   }
 
   form.classList.add("was-validated");
 };
 
 function SignIn() {
+  const [signIn, setSingIn] = useState({ username: "", password: "" });
+
   return (
     <div className="SignIn">
       <h1 className="mb-1">Sign In </h1>
@@ -31,6 +34,14 @@ function SignIn() {
             autoComplete="username"
             className="form-control"
             id="userNameSignIn"
+            value={signIn.username}
+            onChange={(e) => {
+              e.persist();
+              setSingIn((prevSignIn) => ({
+                ...prevSignIn,
+                username: e.target.value,
+              }));
+            }}
             required={true}
           />
         </div>
@@ -44,6 +55,14 @@ function SignIn() {
             className="form-control"
             id="passwordSignIn"
             aria-describedby="forgotPassword"
+            value={signIn.password}
+            onChange={(e) => {
+              e.persist();
+              setSingIn((prevSignIn) => ({
+                ...prevSignIn,
+                password: e.target.value,
+              }));
+            }}
             required={true}
           />
           <div

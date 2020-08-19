@@ -22,7 +22,7 @@ function ListingsTab({ listings, setCurrList }) {
           <div
             data-toggle="tooltip"
             data-placement="bottom"
-            title="Filter options"
+            title="Filter results"
           >
             <svg
               width="1em"

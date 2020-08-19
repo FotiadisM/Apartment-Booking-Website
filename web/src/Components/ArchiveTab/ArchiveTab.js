@@ -1,8 +1,10 @@
 import React from "react";
 import logo from "../../assets/room.jpg";
+import { useHistory } from "react-router-dom";
 
 function ArchiveTab({ userState }) {
-  let [user] = userState;
+  const [user] = userState;
+  let history = useHistory();
 
   return (
     <div
@@ -10,8 +12,17 @@ function ArchiveTab({ userState }) {
       style={{ height: "100%" }}
     >
       {(user.user.role === "admin" || user.user.role === "host") && (
-        <div className="flex-grow-1 mb-4">
-          <h5 className="mb-1">My Listings</h5>
+        <div className="flex-grow-1 mb-4 align-items-center justify-content-">
+          <div className="d-flex justify-content-between align-items-center mb-1">
+            <h5 className="m-0">My Listings</h5>
+            <button
+              className="btn btn-primary"
+              onClick={() => history.push("/main/new")}
+            >
+              {" "}
+              Create new
+            </button>
+          </div>
           <hr className="mt-0" />
         </div>
       )}

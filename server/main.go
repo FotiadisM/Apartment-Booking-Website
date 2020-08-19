@@ -24,11 +24,13 @@ func main() {
 	r := mux.NewRouter()
 
 	ah := auth.NewAuth(l)
-	r.HandleFunc("/login", ah.Login).Methods("GET")
 	r.HandleFunc("/register", ah.Register).Methods("GET")
 	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
 
 	uh := handlers.NewUserHandler(l)
+	r.HandleFunc("/login", uh.Login).Methods("GET")
+	r.HandleFunc("/register", uh.Register).Methods("POST")
+
 	sd := r.PathPrefix("/users").Subrouter()
 	sd.HandleFunc("", uh.GetUsers).Methods("GET")
 	sd.HandleFunc("", uh.AddUser).Methods("POST")
