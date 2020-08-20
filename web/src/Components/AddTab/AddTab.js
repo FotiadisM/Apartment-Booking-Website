@@ -1,6 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
+
+const onCreate = (e, signInInfo, setUser, history) => {
+  const form = document.getElementById("signInForm");
+
+  if (!form.checkValidity()) {
+    e.preventDefault();
+    e.stopPropagation();
+  } else {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  form.classList.add("was-validated");
+};
 
 function AddTab() {
+  const [listing, setListing] = useState({
+    street: "",
+    number: "",
+    neighbourhood: "",
+    city: "",
+    state: "",
+    country: "",
+    zipcode: "",
+    people_num: "",
+    latitude: "",
+    longtitude: "",
+    bed_num: "",
+    room_num: "",
+    bathroom_num: "",
+    square_meters: "",
+    price_day: "",
+    type: "",
+    description: "",
+    rules: "",
+    has_living_room: false,
+  });
+
   return (
     <div className="AddTab mt-2 mb-3">
       <div className="container" style={{ width: "40%" }}>
@@ -9,7 +45,10 @@ function AddTab() {
           className="bg-primary mt-0"
           style={{ height: ".2rem", opacity: "1" }}
         />
-        <form className="border border-primary rounded-lg py-3 px-4">
+        <form
+          className="border border-primary rounded-lg py-3 px-4"
+          onSubmit={() => onCreate()}
+        >
           <div className="row mb-2">
             <div className="col">
               <label

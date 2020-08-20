@@ -1,19 +1,45 @@
 import React, { useState } from "react";
+import { SignInAPI } from "../../../APIs/SignInAPI";
+import { useHistory } from "react-router-dom";
 
-const onSignIn = (e) => {
+const onSignIn = (e, signInInfo, setUser, history) => {
   const form = document.getElementById("signInForm");
 
   if (!form.checkValidity()) {
     e.preventDefault();
     e.stopPropagation();
-    console.log("not okey");
-  }
 
-  form.classList.add("was-validated");
+    form.classList.add("was-validated");
+  } else {
+    e.preventDefault();
+    e.stopPropagation();
+
+    SignInAPI(signInInfo)
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          throw Error("Failed to fetch");
+        }
+      })
+      .then((data) => {
+        setUser({
+          isLogedIn: true,
+          access_token: data.access_token,
+          user: data.user,
+        });
+        history.push("/main");
+      })
+      .catch((err) => console.log(err));
+  }
 };
 
-function SignIn() {
-  const [signIn, setSingIn] = useState({ username: "", password: "" });
+function SignIn({ setUser }) {
+  let history = useHistory();
+  const [signInInfo, setSingIn] = useState({
+    user_name: "",
+    user_password: "",
+  });
 
   return (
     <div className="SignIn">
@@ -23,7 +49,7 @@ function SignIn() {
         className="px-4 py-3 border border-white rounded-lg needs-validation shadow-lg"
         id="signInForm"
         noValidate={true}
-        onSubmit={(e) => onSignIn(e)}
+        onSubmit={(e) => onSignIn(e, signInInfo, setUser, history)}
       >
         <div className="mb-3">
           <label htmlFor="userNameSignIn" className="form-label text-white">
@@ -34,12 +60,12 @@ function SignIn() {
             autoComplete="username"
             className="form-control"
             id="userNameSignIn"
-            value={signIn.username}
+            value={signInInfo.user_name}
             onChange={(e) => {
               e.persist();
               setSingIn((prevSignIn) => ({
                 ...prevSignIn,
-                username: e.target.value,
+                user_name: e.target.value,
               }));
             }}
             required={true}
@@ -55,12 +81,12 @@ function SignIn() {
             className="form-control"
             id="passwordSignIn"
             aria-describedby="forgotPassword"
-            value={signIn.password}
+            value={signInInfo.user_password}
             onChange={(e) => {
               e.persist();
               setSingIn((prevSignIn) => ({
                 ...prevSignIn,
-                password: e.target.value,
+                user_password: e.target.value,
               }));
             }}
             required={true}

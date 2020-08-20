@@ -1,17 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { SignUpAPI } from "../../../APIs/SignUpAPI";
 
-const onSignUp = (e) => {
+const onSignUp = (e, signUpInfo, setUser, history) => {
   const form = document.getElementById("signUpForm");
 
   if (!form.checkValidity()) {
     e.preventDefault();
     e.stopPropagation();
-  }
 
-  form.classList.add("was-validated");
+    form.classList.add("was-validated");
+  } else {
+    e.preventDefault();
+    e.stopPropagation();
+
+    SignUpAPI(signUpInfo)
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else if (res.status === 409) {
+          throw Error("Username is taken");
+        } else {
+          throw Error("failed to register");
+        }
+      })
+      .then((data) => {
+        setUser({
+          isLogedIn: true,
+          access_token: data.access_token,
+          user: data.user,
+        });
+        history.push("/main");
+      })
+      .catch((err) => {
+        if (err.message === "Username is taken") {
+          alert("Username is taken");
+        } else {
+          console.log(err);
+        }
+      });
+  }
 };
 
-function SignUp() {
+function SignUp({ setUser }) {
+  let history = useHistory();
+  const [signUpInfo, setSignUp] = useState({
+    user_name: "",
+    first_name: "",
+    last_name: "",
+    user_password: "",
+    role: "",
+    email: "",
+    tel_number: "",
+  });
+
   return (
     <div className="SignUp">
       <h1 className="mb-1 text-primary">Sign Up</h1>
@@ -22,7 +64,7 @@ function SignUp() {
       <form
         className="px-4 py-3 border border-primary rounded-lg needs-validation shadow"
         id="signUpForm"
-        onSubmit={(e) => onSignUp(e)}
+        onSubmit={(e) => onSignUp(e, signUpInfo, setUser, history)}
         noValidate={true}
       >
         <div className="row mb-2">
@@ -37,6 +79,14 @@ function SignUp() {
               type="text"
               className="form-control"
               id="fNameSignUp"
+              value={signUpInfo.first_name}
+              onChange={(e) => {
+                e.persist();
+                setSignUp((prevSignUp) => ({
+                  ...prevSignUp,
+                  first_name: e.target.value,
+                }));
+              }}
               required={true}
             />
           </div>
@@ -51,6 +101,14 @@ function SignUp() {
               type="text"
               className="form-control"
               id="lNameSignUp"
+              value={signUpInfo.last_name}
+              onChange={(e) => {
+                e.persist();
+                setSignUp((prevSignUp) => ({
+                  ...prevSignUp,
+                  last_name: e.target.value,
+                }));
+              }}
               required={true}
             />
           </div>
@@ -63,6 +121,14 @@ function SignUp() {
             type="email"
             className="form-control"
             id="emailSignUp"
+            value={signUpInfo.email}
+            onChange={(e) => {
+              e.persist();
+              setSignUp((prevSignUp) => ({
+                ...prevSignUp,
+                email: e.target.value,
+              }));
+            }}
             required={true}
           />
         </div>
@@ -78,6 +144,14 @@ function SignUp() {
             className="form-control"
             id="usernameSignUp"
             autoComplete="username"
+            value={signUpInfo.user_name}
+            onChange={(e) => {
+              e.persist();
+              setSignUp((prevSignUp) => ({
+                ...prevSignUp,
+                user_name: e.target.value,
+              }));
+            }}
             required={true}
           />
         </div>
@@ -93,6 +167,14 @@ function SignUp() {
             autoComplete="new-password"
             className="form-control"
             id="passwordSignUp"
+            value={signUpInfo.user_password}
+            onChange={(e) => {
+              e.persist();
+              setSignUp((prevSignUp) => ({
+                ...prevSignUp,
+                user_password: e.target.value,
+              }));
+            }}
             required={true}
           />
         </div>
@@ -121,6 +203,14 @@ function SignUp() {
             autoComplete="new-password"
             className="form-control"
             id="telSignUp"
+            value={signUpInfo.tel_number}
+            onChange={(e) => {
+              e.persist();
+              setSignUp((prevSignUp) => ({
+                ...prevSignUp,
+                tel_number: e.target.value,
+              }));
+            }}
             required={true}
           />
         </div>
@@ -132,6 +222,9 @@ function SignUp() {
               name="radioSignUp"
               id="userRadioSignUp"
               value="user"
+              onClick={() =>
+                setSignUp((prevSignUp) => ({ ...prevSignUp, role: "user" }))
+              }
               required={true}
             />
             <label className="form-check-label" htmlFor="userRadioSignUp">
@@ -145,6 +238,9 @@ function SignUp() {
               name="radioSignUp"
               id="hostRadioSignUp"
               value="host"
+              onClick={() =>
+                setSignUp((prevSignUp) => ({ ...prevSignUp, role: "host" }))
+              }
               required={true}
             />
             <label className="form-check-label" htmlFor="hostRadioSignUp">

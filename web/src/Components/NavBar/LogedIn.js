@@ -19,7 +19,7 @@ function LogedIn({ userState, setTab }) {
           data-toggle="dropdown"
           aria-expanded="false"
         >
-          {user.user.name}
+          {user.user.user_name}
         </button>
         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <li>

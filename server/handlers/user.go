@@ -69,7 +69,6 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	rValue["user"] = u
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(rValue)
 	if err != nil {
 		h.l.Println("Error encoding JSON", err)
@@ -96,10 +95,15 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if u.Role == "host" {
+		u.Varified = true
+		u.Listings = []modules.UserListings{}
+	}
+
 	id, err := storage.AddUser(u)
 	if err != nil {
 		if err.Error() == storage.ErrExists {
-			w.Write([]byte("Username is taken"))
+			http.Error(w, "Username is taken", http.StatusConflict)
 			return
 		}
 		h.l.Println("Error inseting user in the database", err)
@@ -129,7 +133,17 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(id)
+	tokens, err := auth.CreateTokens(l.UserID, l.Role)
+
+	res := make(map[string]interface{})
+	for key, value := range tokens {
+		res[key] = value
+	}
+	u.ID = id
+	res["user"] = u
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
 	if err != nil {
 		h.l.Println("Error encoding JSON", err)
 		w.WriteHeader(http.StatusInternalServerError)

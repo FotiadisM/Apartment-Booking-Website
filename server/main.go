@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/FotiadisM/homebnb/server/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -24,11 +26,10 @@ func main() {
 	r := mux.NewRouter()
 
 	ah := auth.NewAuth(l)
-	r.HandleFunc("/register", ah.Register).Methods("GET")
 	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
 
 	uh := handlers.NewUserHandler(l)
-	r.HandleFunc("/login", uh.Login).Methods("GET")
+	r.HandleFunc("/login", uh.Login).Methods("POST")
 	r.HandleFunc("/register", uh.Register).Methods("POST")
 
 	sd := r.PathPrefix("/users").Subrouter()
@@ -54,9 +55,12 @@ func main() {
 	rs.HandleFunc("/{id}", rh.UpdateReview).Methods("PUT")
 	rs.HandleFunc("/{id}", rh.DeleteReview).Methods("DELETE")
 
+	ch := cors.Default().Handler(r)
+
+	fmt.Println("Server running on:", os.Getenv("SERVER_HOST")+":"+os.Getenv("SERVER_PORT"))
 	s := http.Server{
 		Addr:         os.Getenv("SERVER_HOST") + ":" + os.Getenv("SERVER_PORT"),
-		Handler:      r,
+		Handler:      ch,
 		ErrorLog:     l,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,

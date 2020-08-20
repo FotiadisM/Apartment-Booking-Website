@@ -9,20 +9,23 @@ import SettingsTab from "../../Components/SettingsTab/SettingsTab";
 
 function Main({ userState, searchState }) {
   let { path } = useRouteMatch();
+  const [user] = userState;
   const [tab, setTab] = useState({
     current: "searchTab",
     previous: "",
   });
 
   useEffect(() => {
-    if (tab.previous !== "") {
-      const prevEl = document.getElementById(tab.previous);
-      prevEl.classList.remove("active");
-    }
+    if (user.isLogedIn) {
+      if (tab.previous !== "") {
+        const prevEl = document.getElementById(tab.previous);
+        prevEl.classList.remove("active");
+      }
 
-    const el = document.getElementById(tab.current);
-    el.classList.add("active");
-  }, [tab]);
+      const el = document.getElementById(tab.current);
+      el.classList.add("active");
+    }
+  }, [tab, user.isLogedIn]);
 
   return (
     <div className="Main d-flex flex-column" style={{ height: "100%" }}>

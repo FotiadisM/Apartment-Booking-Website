@@ -21,6 +21,7 @@ type Listing struct {
 	UserName      string           `json:"user_name" bson:"user_name"`
 	PriceDay      int              `json:"price_day" bson:"price_day"`
 	BedNum        int              `json:"bed_num" bson:"bed_num"`
+	PeopleNum     int              `json:"people_num" bson:"people_num"`
 	RoomNum       int              `json:"room_num" bson:"room_num"`
 	BathroomNum   int              `json:"bathroom_num" bson:"bath_num"`
 	HasLivingRoom bool             `json:"has_living_room" bson:"has_living_room"`
@@ -31,6 +32,7 @@ type Listing struct {
 	ReviewNum     int              `json:"review_num" bson:"review_num"`
 	ReviewAvrg    float32          `json:"review_avrg" bson:"review_avrg"`
 	Street        string           `json:"street" bson:"street"`
+	Number        string           `json:"number" bson:"number"`
 	Neighbourhood string           `json:"neighbourhood" bson:"neighbourhood"`
 	City          string           `json:"city" bson:"city"`
 	State         string           `json:"state" bson:"state"`

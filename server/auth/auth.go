@@ -29,11 +29,6 @@ func NewAuth(l *log.Logger) *Auth {
 	return &Auth{l}
 }
 
-// Register registers a new user and retturn accesss and refresh tokens and the newly created user
-func (a *Auth) Register(w http.ResponseWriter, r *http.Request) {
-
-}
-
 // TokenAuthMiddleware extracts token from header validates it
 func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

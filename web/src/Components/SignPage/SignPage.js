@@ -2,7 +2,9 @@ import React from "react";
 import SignUp from "./SignUp/SignUp";
 import SignIn from "./SignIn/SignIn";
 
-function SignPage() {
+function SignPage({ userState }) {
+  const [, setUser] = userState;
+
   return (
     <div className="d-flex h-100">
       <div
@@ -18,7 +20,7 @@ function SignPage() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <SignIn />
+          <SignIn setUser={setUser} />
         </div>
       </div>
       <div className="w-50" style={{ position: "relative" }}>
@@ -31,7 +33,7 @@ function SignPage() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <SignUp />
+          <SignUp setUser={setUser} />
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ function App() {
     access_token: "",
     user: {
       id: 0,
-      name: "Flwros Nekros",
+      user_name: "Flwros Nekros",
       role: "admin",
     },
   });
@@ -34,7 +34,7 @@ function App() {
           <Main userState={userState} searchState={searchState} />
         </Route>
         <Route exact path="/signpage">
-          <SignPage />
+          <SignPage userState={userState} />
         </Route>
         <Route path="/">
           <div>404</div>
