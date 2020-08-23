@@ -36,7 +36,7 @@ function Main({ userState, searchState }) {
             <SearchTab searchState={searchState} />
           </Route>
           <Route exact path={`${path}/new`}>
-            <AddTab />
+            <AddTab userState={userState} />
           </Route>
           <Route exact path={`${path}/archive`}>
             <ArchiveTab userState={userState} />

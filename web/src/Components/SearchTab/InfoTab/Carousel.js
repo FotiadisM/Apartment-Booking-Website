@@ -1,7 +1,6 @@
 import React from "react";
-import logo from "../../../assets/room.jpg";
 
-function Carousel({ images }) {
+function Carousel({ photos }) {
   return (
     <div className="Carousel">
       <div
@@ -10,20 +9,71 @@ function Carousel({ images }) {
         data-ride="carousel"
       >
         <ol className="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to="0"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          {photos.map((photo, i) => {
+            if (i === 0) {
+              return (
+                <li
+                  data-target="#carouselExampleIndicators"
+                  className="active"
+                  data-slide-to={i}
+                  key={photo.id}
+                ></li>
+              );
+            } else {
+              return (
+                <li
+                  data-target="#carouselExampleIndicators"
+                  data-slide-to={i}
+                  key={photo.id}
+                ></li>
+              );
+            }
+          })}
         </ol>
-        <div className="carousel-inner rounded-top">
-          <div className="carousel-item active">
-            <img src={logo} className="d-block w-100" alt="listing_photo" />
-          </div>
-          <div className="carousel-item">
-            <img src={logo} className="d-block w-100" alt="listing_photo" />
-          </div>
-          <div className="carousel-item">
-            <img src={logo} className="d-block w-100" alt="listing_photo" />
-          </div>
+        <div
+          className="carousel-inner rounded-top"
+          style={{ transition: "height 1s" }}
+        >
+          {photos.map((photo, i) => {
+            if (i === 0) {
+              return (
+                <div
+                  className="carousel-item active"
+                  key={photo.id}
+                  // style={{ transition: "height 200ms ease-out" }}
+                >
+                  <img
+                    src={
+                      "http://" +
+                      process.env.REACT_APP_BACKEND +
+                      "/images/" +
+                      photo.id
+                    }
+                    className="d-block w-100"
+                    alt="listing_photo"
+                  />
+                </div>
+              );
+            } else
+              return (
+                <div
+                  className="carousel-item"
+                  key={photo.id}
+                  // style={{ transition: "height 200ms ease-out" }}
+                >
+                  <img
+                    src={
+                      "http://" +
+                      process.env.REACT_APP_BACKEND +
+                      "/images/" +
+                      photo.id
+                    }
+                    className="d-block w-100"
+                    alt="listing_photo"
+                  />
+                </div>
+              );
+          })}
         </div>
         <a
           className="carousel-control-prev"

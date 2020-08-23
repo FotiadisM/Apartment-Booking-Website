@@ -11,7 +11,7 @@ function InfoTab({ currList }) {
         <hr />
 
         <div>
-          <Carousel />
+          <Carousel photos={currList.photos} />
           <div className="border rounded-bottom p-3 shadow">
             <h4>
               {currList.street}, {currList.neighbourhood} - {currList.city}

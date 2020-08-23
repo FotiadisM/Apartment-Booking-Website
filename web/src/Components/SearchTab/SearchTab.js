@@ -27,6 +27,11 @@ const array = [
     country: "Greece",
     latitude: "312,42",
     longtitude: "782.54",
+    photos: [
+      {
+        id: "room.jpg",
+      },
+    ],
     reviews: [
       {
         id: 1,
@@ -70,6 +75,14 @@ const array = [
     country: "Greece",
     latitude: "312,42",
     longtitude: "782.54",
+    photos: [
+      {
+        id: "room.jpg",
+      },
+      {
+        id: "rnl.jpg",
+      },
+    ],
     reviews: [
       {
         id: 1,
@@ -89,42 +102,6 @@ const array = [
         text: "Cool place",
       },
     ],
-  },
-  {
-    id: 3,
-    name: "Mike's Hotel",
-    price: 12,
-    bedNums: 2,
-  },
-  {
-    id: 4,
-    name: "Mike's Hotel",
-    price: 12,
-    bedNums: 2,
-  },
-  {
-    id: 5,
-    name: "Mike's Hotel",
-    price: 12,
-    bedNums: 2,
-  },
-  {
-    id: 6,
-    name: "Mike's Hotel",
-    price: 12,
-    bedNums: 2,
-  },
-  {
-    id: 7,
-    name: "Mike's Hotel",
-    price: 12,
-    bedNums: 2,
-  },
-  {
-    id: 8,
-    name: "Mike's Hotel",
-    price: 12,
-    bedNums: 2,
   },
 ];
 

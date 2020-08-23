@@ -42,6 +42,7 @@ func main() {
 
 	lh := handlers.NewListingHandler(l)
 	ls := r.PathPrefix("/listings").Subrouter()
+	ls.HandleFunc("", lh.GetListings).Methods("GET")
 	ls.HandleFunc("", lh.AddListing).Methods("POST")
 	ls.HandleFunc("/{id}", lh.GetListing).Methods("GET")
 	ls.HandleFunc("/{id}", lh.UpdateListing).Methods("PUT")
@@ -50,9 +51,7 @@ func main() {
 
 	ih := handlers.NewImageHandler(l)
 	r.HandleFunc("/images/{name}", ih.GetImage).Methods("GET")
-	r.HandleFunc("/images/{name}", ih.PostImage).Methods("POST")
-
-	// r.Handle("/images/", http.StripPrefix("/images", http.FileServer(http.Dir("/home/fotiadis/"))))
+	r.HandleFunc("/images", ih.PostImage).Methods("POST")
 
 	rh := handlers.NewReviewHandler(l)
 	rs := r.PathPrefix("/reviews").Subrouter()

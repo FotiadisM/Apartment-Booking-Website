@@ -7,7 +7,7 @@ const onFileChange = (e, setPhotos) => {
   }
 };
 
-const onCreate = (e, signInInfo, setUser, history) => {
+const onCreate = (e, photos, listing, setListing, user) => {
   const form = document.getElementById("creatForm");
 
   if (!form.checkValidity()) {
@@ -16,14 +16,58 @@ const onCreate = (e, signInInfo, setUser, history) => {
   } else {
     e.preventDefault();
     e.stopPropagation();
+
+    var data = new FormData();
+    for (let i = 0; i < photos.length; i++) {
+      data.append(i.toString(), photos[i]);
+    }
+
+    fetch("http://localhost:8080/images", {
+      method: "POST",
+      body: data,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          throw Error("Failed to upload image");
+        }
+      })
+      .then((data) => {
+        setListing((prevListing) => ({ ...prevListing, photos: data }));
+
+        fetch("http://localhost:8080/listings", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(listing),
+        })
+          .then((res) => {
+            if (res.status === 200) {
+              return res.json();
+            } else {
+              throw Error("Failed to upload listing");
+            }
+          })
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   }
 
   form.classList.add("was-validated");
 };
 
-function AddTab() {
+function AddTab({ userState }) {
+  const [user] = userState;
   const [photos, setPhotos] = useState([]);
   const [listing, setListing] = useState({
+    user_id: user.user.id,
+    user_name: user.user.user_name,
     street: "",
     number: "",
     neighbourhood: "",
@@ -35,10 +79,11 @@ function AddTab() {
     bed_num: "",
     room_num: "",
     bathroom_num: "",
+    has_living_room: true,
     square_meters: "",
     price_day: "",
     type: "apartment",
-    listing: [],
+    photos: [],
     description: "",
     rules: "",
   });
@@ -55,7 +100,7 @@ function AddTab() {
           className="border border-primary rounded-lg py-3 px-4 needs-validation"
           id="creatForm"
           noValidate={true}
-          onSubmit={(e) => onCreate(e, setPhotos)}
+          onSubmit={(e) => onCreate(e, photos, listing, setListing, user)}
         >
           <div className="row gy-2">
             <div className="col-sm-6">

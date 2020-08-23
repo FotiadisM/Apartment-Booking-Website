@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/FotiadisM/homebnb/server/auth"
+	"github.com/FotiadisM/homebnb/server/modules"
+	"github.com/FotiadisM/homebnb/server/storage"
 	"github.com/gorilla/mux"
 )
 
@@ -30,9 +33,6 @@ func (h *ListingHandler) GetListing(w http.ResponseWriter, r *http.Request) {
 
 // AddListing is a HandleFunc that adds a new listing
 func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	rid := vars["id"]
-
 	claims, err := auth.ExtractClaims(r)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -45,19 +45,47 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	l := modules.Listing{}
+	err = json.NewDecoder(r.Body).Decode(&l)
+	if err != nil {
+		h.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
+		return
+	}
+
+	l.Reviews = []modules.ListingReviews{}
+
 	switch role {
 	case "admin":
 
-	case "landlord":
+	case "host":
 		cid, ok := claims["user_id"].(string)
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		if cid != rid {
+		if cid != l.UserID {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
+
+		id, err := storage.AddListings(l)
+		if err != nil {
+			h.l.Println(err)
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+
+		res := make(map[string]string)
+		res["id"] = id
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(res)
+		if err != nil {
+			h.l.Println("Error encoding JSON", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
 	default:
 		w.WriteHeader(http.StatusForbidden)
 		return

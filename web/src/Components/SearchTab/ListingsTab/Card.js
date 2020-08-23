@@ -1,5 +1,4 @@
 import React from "react";
-import room from "../../../assets/room.jpg";
 
 function Card({ listing, setCurrList }) {
   return (
@@ -7,7 +6,12 @@ function Card({ listing, setCurrList }) {
       <div className="col-sm-4">
         <img
           className="rounded-left rounded-lg"
-          src={room}
+          src={
+            "http://" +
+            process.env.REACT_APP_BACKEND +
+            "/images/" +
+            listing.photos[0].id
+          }
           width="100%"
           alt="listing phote"
         />
