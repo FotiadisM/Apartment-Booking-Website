@@ -38,6 +38,7 @@ function AddTab() {
     square_meters: "",
     price_day: "",
     type: "apartment",
+    listing: [],
     description: "",
     rules: "",
   });

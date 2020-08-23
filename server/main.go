@@ -48,6 +48,12 @@ func main() {
 	ls.HandleFunc("/{id}", lh.DeleteListing).Methods("DELETE")
 	ls.Use(ah.TokenAuthMiddleware)
 
+	ih := handlers.NewImageHandler(l)
+	r.HandleFunc("/images/{name}", ih.GetImage).Methods("GET")
+	r.HandleFunc("/images/{name}", ih.PostImage).Methods("POST")
+
+	// r.Handle("/images/", http.StripPrefix("/images", http.FileServer(http.Dir("/home/fotiadis/"))))
+
 	rh := handlers.NewReviewHandler(l)
 	rs := r.PathPrefix("/reviews").Subrouter()
 	rs.HandleFunc("", rh.AddReview).Methods("POST")
