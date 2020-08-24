@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const onFileChange = (e, setPhotos) => {
   const files = e.target.files;
@@ -7,7 +8,7 @@ const onFileChange = (e, setPhotos) => {
   }
 };
 
-const onCreate = (e, photos, listing, setListing, user) => {
+const onCreate = (e, photos, listing, setListing, user, history) => {
   const form = document.getElementById("creatForm");
 
   if (!form.checkValidity()) {
@@ -24,6 +25,9 @@ const onCreate = (e, photos, listing, setListing, user) => {
 
     fetch("http://localhost:8080/images", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${user.access_token}`,
+      },
       body: data,
     })
       .then((res) => {
@@ -42,7 +46,7 @@ const onCreate = (e, photos, listing, setListing, user) => {
             Authorization: `Bearer ${user.access_token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(listing),
+          body: JSON.stringify({ ...listing, photos: data }),
         })
           .then((res) => {
             if (res.status === 200) {
@@ -52,7 +56,8 @@ const onCreate = (e, photos, listing, setListing, user) => {
             }
           })
           .then((data) => {
-            console.log(data);
+            console.log("data:", data);
+            alert("Listing added");
           })
           .catch((err) => console.log(err));
       })
@@ -63,6 +68,7 @@ const onCreate = (e, photos, listing, setListing, user) => {
 };
 
 function AddTab({ userState }) {
+  let history = useHistory(0);
   const [user] = userState;
   const [photos, setPhotos] = useState([]);
   const [listing, setListing] = useState({
@@ -100,7 +106,9 @@ function AddTab({ userState }) {
           className="border border-primary rounded-lg py-3 px-4 needs-validation"
           id="creatForm"
           noValidate={true}
-          onSubmit={(e) => onCreate(e, photos, listing, setListing, user)}
+          onSubmit={(e) =>
+            onCreate(e, photos, listing, setListing, user, history)
+          }
         >
           <div className="row gy-2">
             <div className="col-sm-6">

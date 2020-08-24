@@ -1,6 +1,8 @@
 import React from "react";
 
-function SettingsPage() {
+function SettingsPage({ userState }) {
+  const [user] = userState;
+
   return (
     <div className="SettingsTab mt-2 mb-3">
       <div className="container" style={{ width: "40%" }}>
@@ -18,7 +20,12 @@ function SettingsPage() {
               >
                 First Name
               </label>
-              <input type="text" className="form-control" id="fNameSettings" />
+              <input
+                type="text"
+                className="form-control"
+                id="fNameSettings"
+                value={user.user.first_name}
+              />
             </div>
             <div className="col">
               <label
@@ -27,7 +34,12 @@ function SettingsPage() {
               >
                 Last Name
               </label>
-              <input type="text" className="form-control" id="lNameSettings" />
+              <input
+                type="text"
+                className="form-control"
+                id="lNameSettings"
+                value={user.user.last_name}
+              />
             </div>
           </div>
           <div className="mb-2">
@@ -37,7 +49,12 @@ function SettingsPage() {
             >
               Email
             </label>
-            <input type="email" className="form-control" id="emailSettings" />
+            <input
+              type="email"
+              className="form-control"
+              id="emailSettings"
+              value={user.user.email}
+            />
           </div>
           <div className="mb-2">
             <label
@@ -51,6 +68,7 @@ function SettingsPage() {
               className="form-control"
               id="usernameSettings"
               autoComplete="username"
+              value={user.user.user_name}
             />
           </div>
           <div className="mb-2">
@@ -80,6 +98,7 @@ function SettingsPage() {
               autoComplete="new-password"
               className="form-control"
               id="telSettings"
+              value={user.user.tel_number}
             />
           </div>
           <div className="mt-4 d-flex justify-content-end">

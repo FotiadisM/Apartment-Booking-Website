@@ -85,13 +85,12 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 			h.l.Println("Error encoding JSON", err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}
+		return
 
 	default:
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-
-	w.Write([]byte("addUser"))
 }
 
 // UpdateListing is a Handlefunc that updates a listing

@@ -19,13 +19,13 @@ type Listing struct {
 	ID            string           `json:"id" bson:"_id,omitempty"`
 	UserID        string           `json:"user_id" bson:"user_id"`
 	UserName      string           `json:"user_name" bson:"user_name"`
-	PriceDay      int              `json:"price_day" bson:"price_day"`
-	BedNum        int              `json:"bed_num" bson:"bed_num"`
-	PeopleNum     int              `json:"people_num" bson:"people_num"`
-	RoomNum       int              `json:"room_num" bson:"room_num"`
-	BathroomNum   int              `json:"bathroom_num" bson:"bath_num"`
+	PriceDay      string           `json:"price_day" bson:"price_day"`
+	BedNum        string           `json:"bed_num" bson:"bed_num"`
+	PeopleNum     string           `json:"people_num" bson:"people_num"`
+	RoomNum       string           `json:"room_num" bson:"room_num"`
+	BathroomNum   string           `json:"bathroom_num" bson:"bath_num"`
 	HasLivingRoom bool             `json:"has_living_room" bson:"has_living_room"`
-	SquareMeters  int              `json:"square_meters" bson:"square_meters"`
+	SquareMeters  string           `json:"square_meters" bson:"square_meters"`
 	Description   string           `json:"description" bson:"description"`
 	Type          string           `json:"type" bson:"type"`
 	Rules         string           `json:"rules" bson:"rules"`
@@ -36,7 +36,7 @@ type Listing struct {
 	Neighbourhood string           `json:"neighbourhood" bson:"neighbourhood"`
 	City          string           `json:"city" bson:"city"`
 	State         string           `json:"state" bson:"state"`
-	Zipcode       int              `json:"zipcode" bson:"zipcode"`
+	Zipcode       string           `json:"zipcode" bson:"zipcode"`
 	Country       string           `json:"country" bson:"country"`
 	Latitude      float64          `json:"latitude" bson:"latitude"`
 	Longitude     float64          `json:"longtitude" bson:"longtitude"`

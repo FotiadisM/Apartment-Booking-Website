@@ -50,8 +50,10 @@ func main() {
 	ls.Use(ah.TokenAuthMiddleware)
 
 	ih := handlers.NewImageHandler(l)
-	r.HandleFunc("/images/{name}", ih.GetImage).Methods("GET")
-	r.HandleFunc("/images", ih.PostImage).Methods("POST")
+	is := r.PathPrefix("/images").Subrouter()
+	is.Use(ah.TokenAuthMiddleware)
+	is.HandleFunc("", ih.PostImage).Methods("POST")
+	is.HandleFunc("/{name}", ih.GetImage).Methods("GET")
 
 	rh := handlers.NewReviewHandler(l)
 	rs := r.PathPrefix("/reviews").Subrouter()
@@ -60,7 +62,10 @@ func main() {
 	rs.HandleFunc("/{id}", rh.UpdateReview).Methods("PUT")
 	rs.HandleFunc("/{id}", rh.DeleteReview).Methods("DELETE")
 
-	ch := cors.Default().Handler(r)
+	ch := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedHeaders: []string{"*"},
+	}).Handler(r)
 
 	fmt.Println("Server running on:", os.Getenv("SERVER_HOST")+":"+os.Getenv("SERVER_PORT"))
 	s := http.Server{
