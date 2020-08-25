@@ -69,7 +69,7 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		id, err := storage.AddListings(l)
+		id, err := storage.AddListing(l)
 		if err != nil {
 			h.l.Println(err)
 			w.WriteHeader(http.StatusForbidden)

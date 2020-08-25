@@ -111,8 +111,14 @@ function SearchTab({ searchState }) {
   const [currList, setCurrList] = useState({});
 
   useEffect(() => {
-    setListings(array);
-    setCurrList(array[0]);
+    fetch("http://localhost:8080/search")
+      .then((res) => res.json())
+      .then((data) => {
+        setListings(data);
+        if (data != null) {
+          setCurrList(data[0]);
+        }
+      });
   }, [search]);
 
   return (

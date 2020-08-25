@@ -28,30 +28,33 @@ func main() {
 	ah := auth.NewAuth(l)
 	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
 
+	sh := handlers.NewSearchHandler(l)
+	r.HandleFunc("/search", sh.GetSearchResults).Methods("GET")
+
 	uh := handlers.NewUserHandler(l)
 	r.HandleFunc("/login", uh.Login).Methods("POST")
 	r.HandleFunc("/register", uh.Register).Methods("POST")
 
 	sd := r.PathPrefix("/users").Subrouter()
+	sd.Use(ah.TokenAuthMiddleware)
 	sd.HandleFunc("", uh.GetUsers).Methods("GET")
 	sd.HandleFunc("", uh.AddUser).Methods("POST")
 	sd.HandleFunc("/{id}", uh.GetUser).Methods("GET")
 	sd.HandleFunc("/{id}", uh.DeleteUser).Methods("DELETE")
 	sd.HandleFunc("/{id}", uh.UpdateUser).Methods("PUT")
-	sd.Use(ah.TokenAuthMiddleware)
 
 	lh := handlers.NewListingHandler(l)
 	ls := r.PathPrefix("/listings").Subrouter()
+	ls.Use(ah.TokenAuthMiddleware)
 	ls.HandleFunc("", lh.GetListings).Methods("GET")
 	ls.HandleFunc("", lh.AddListing).Methods("POST")
 	ls.HandleFunc("/{id}", lh.GetListing).Methods("GET")
 	ls.HandleFunc("/{id}", lh.UpdateListing).Methods("PUT")
 	ls.HandleFunc("/{id}", lh.DeleteListing).Methods("DELETE")
-	ls.Use(ah.TokenAuthMiddleware)
 
 	ih := handlers.NewImageHandler(l)
 	is := r.PathPrefix("/images").Subrouter()
-	is.Use(ah.TokenAuthMiddleware)
+	// is.Use(ah.TokenAuthMiddleware)
 	is.HandleFunc("", ih.PostImage).Methods("POST")
 	is.HandleFunc("/{name}", ih.GetImage).Methods("GET")
 

@@ -75,13 +75,14 @@ function ListingsTab({ listings, setCurrList }) {
         </div>
       </div>
       <div className="row gx-0 gy-3">
-        {listings.map((listing) => {
-          return (
-            <div className="col-12" key={listing.id}>
-              <Card listing={listing} setCurrList={setCurrList} />
-            </div>
-          );
-        })}
+        {listings !== null &&
+          listings.map((listing) => {
+            return (
+              <div className="col-12" key={listing.id}>
+                <Card listing={listing} setCurrList={setCurrList} />
+              </div>
+            );
+          })}
       </div>
       <nav className="mt-4 float-right">
         <ul className="pagination">
