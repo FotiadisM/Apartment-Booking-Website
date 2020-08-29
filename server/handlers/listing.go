@@ -72,7 +72,14 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 		id, err := storage.AddListing(l)
 		if err != nil {
 			h.l.Println(err)
-			w.WriteHeader(http.StatusForbidden)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		err = storage.AddUserListing(l.UserID, id)
+		if err != nil {
+			h.l.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 

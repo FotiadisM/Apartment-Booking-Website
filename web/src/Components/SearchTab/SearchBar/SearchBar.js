@@ -4,7 +4,11 @@ function SearchBar({ searchState }) {
   const [search, setSearch] = searchState;
 
   return (
-    <form className="row rounded needs-validation g-2" noValidate={true}>
+    <form
+      className="row rounded needs-validation g-2"
+      noValidate={true}
+      onSubmit={() => console.log("submit")}
+    >
       <div className="col-sm-4">
         <input
           type="text"

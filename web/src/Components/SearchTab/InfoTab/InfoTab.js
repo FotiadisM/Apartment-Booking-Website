@@ -2,7 +2,7 @@ import React from "react";
 import Carousel from "./Carousel";
 import Review from "./Review";
 
-function InfoTab({ currList }) {
+function InfoTab({ currList, user }) {
   if (Object.keys(currList).length === 0) {
     return <div></div>;
   } else {
@@ -53,6 +53,7 @@ function InfoTab({ currList }) {
                 <button className="btn btn-primary ml-2">Book Now!</button>
               </div>
             </div>
+
             <div className="collapse" id="collapseReview">
               <div className="py-2 mt-2">
                 <textarea
@@ -82,6 +83,7 @@ function InfoTab({ currList }) {
                 </div>
               </div>
             </div>
+
             <hr className="mx-4 my-3" />
             <div className="row gx-0 gy-2">
               {currList.reviews.map((review) => {

@@ -95,7 +95,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if u.Role == "host" {
+	if u.Role != "user" {
 		u.Varified = true
 		u.Listings = []modules.UserListings{}
 	}

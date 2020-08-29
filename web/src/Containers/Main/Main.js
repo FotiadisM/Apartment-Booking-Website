@@ -33,7 +33,7 @@ function Main({ userState, searchState }) {
       <div className="my-4 flex-grow-1">
         <Switch>
           <Route exact path={path}>
-            <SearchTab searchState={searchState} />
+            <SearchTab searchState={searchState} user={userState[0]} />
           </Route>
           <Route exact path={`${path}/new`}>
             <AddTab userState={userState} />

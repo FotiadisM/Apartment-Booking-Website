@@ -105,7 +105,7 @@ const array = [
   },
 ];
 
-function SearchTab({ searchState }) {
+function SearchTab({ searchState, user }) {
   const [search] = searchState;
   const [listings, setListings] = useState([]);
   const [currList, setCurrList] = useState({});
@@ -130,7 +130,7 @@ function SearchTab({ searchState }) {
             <ListingsTab listings={listings} setCurrList={setCurrList} />
           </div>
           <div className="col-6">
-            <InfoTab currList={currList} />
+            <InfoTab currList={currList} user={user} />
           </div>
         </div>
       </div>

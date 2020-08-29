@@ -55,7 +55,7 @@ func main() {
 	ih := handlers.NewImageHandler(l)
 	is := r.PathPrefix("/images").Subrouter()
 	// is.Use(ah.TokenAuthMiddleware)
-	is.HandleFunc("", ih.PostImage).Methods("POST")
+	is.HandleFunc("", ah.TokenAuthMiddlewareHandleFunc(ih.PostImage)).Methods("POST")
 	is.HandleFunc("/{name}", ih.GetImage).Methods("GET")
 
 	rh := handlers.NewReviewHandler(l)

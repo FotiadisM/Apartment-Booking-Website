@@ -52,6 +52,29 @@ func (a *Auth) TokenAuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// TokenAuthMiddlewareHandleFunc extracts token from header validates it
+func (a *Auth) TokenAuthMiddlewareHandleFunc(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		_, err := verifyToken(r)
+		if err != nil {
+			if err.Error() == errTokenExpired {
+				http.Error(w, err.Error(), http.StatusUnauthorized)
+				return
+			}
+			if err.Error() == errWrongSigingMethod {
+				a.l.Println(err)
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	}
+}
+
 // Refresh registers a new user and retturn accesss and refresh tokens and the newly created user
 func (a *Auth) Refresh(w http.ResponseWriter, r *http.Request) {
 	t, err := verifyToken(r)
@@ -87,7 +110,7 @@ func createAccessToken(userID string, role string) (token string, err error) {
 	c := jwt.MapClaims{}
 	c["user_id"] = userID
 	c["role"] = role
-	c["exp"] = time.Now().Add(time.Minute * 10).Unix()
+	c["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	token, err = t.SignedString([]byte(os.Getenv(secret)))

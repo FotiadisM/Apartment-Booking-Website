@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/FotiadisM/homebnb/server/modules"
@@ -139,6 +140,80 @@ func GetUser(id string) (u modules.User, err error) {
 	}
 
 	err = sr.Decode(&u)
+	if err != nil {
+		return
+	}
+
+	err = client.Disconnect(context.TODO())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// AddUserListing add a listing to a user
+func AddUserListing(userID, listingID string) (err error) {
+
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return
+	}
+
+	coll := client.Database("tedi").Collection("users")
+
+	fmt.Println(userID)
+
+	oid, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return
+	}
+	ul := modules.UserListings{ID: listingID}
+
+	filter := bson.D{primitive.E{Key: "_id", Value: oid}}
+	update := bson.D{primitive.E{Key: "$addToSet", Value: bson.D{primitive.E{Key: "listings", Value: ul}}}}
+
+	_, err = coll.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return
+	}
+
+	err = client.Disconnect(context.TODO())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// AddUserReview add a review ro the user
+func AddUserReview(userID, reviewID string) (err error) {
+
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return
+	}
+
+	coll := client.Database("tedi").Collection("users")
+
+	fmt.Println(userID)
+
+	oid, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return
+	}
+	ul := modules.UserListings{ID: reviewID}
+
+	filter := bson.D{primitive.E{Key: "_id", Value: oid}}
+	update := bson.D{primitive.E{Key: "$addToSet", Value: bson.D{primitive.E{Key: "listings", Value: ul}}}}
+
+	_, err = coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return
 	}

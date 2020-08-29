@@ -34,7 +34,7 @@ const onCreate = (e, photos, listing, setListing, user, history) => {
         if (res.status === 200) {
           return res.json();
         } else {
-          throw Error("Failed to upload image");
+          throw Error("Failed to upload image", res);
         }
       })
       .then((data) => {
@@ -52,7 +52,7 @@ const onCreate = (e, photos, listing, setListing, user, history) => {
             if (res.status === 200) {
               return res.json();
             } else {
-              throw Error("Failed to upload listing");
+              throw Error("Failed to upload listing", res);
             }
           })
           .then((data) => {
