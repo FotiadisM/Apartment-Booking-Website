@@ -18,6 +18,11 @@ type UserListings struct {
 	ID string `json:"id" bson:"id"`
 }
 
+// UserReview blah blah
+type UserReview struct {
+	ID string `json:"id" bson:"id"`
+}
+
 // User defines the properties of a user
 type User struct {
 	ID              string         `json:"id" bson:"_id,omitempty"`
@@ -29,6 +34,7 @@ type User struct {
 	TelephoneNumber string         `json:"tel_number" bson:"telephone_num"`
 	Varified        bool           `json:"varified" bson:"verified"`
 	Listings        []UserListings `json:"listings" bson:"listings"`
+	Reviews         []UserReview   `json:"reviews" bson:"reviews"`
 	Created         time.Time      `json:"-" bson:"created"`
 	Updated         time.Time      `json:"-" bson:"updated,omitempty"`
 }

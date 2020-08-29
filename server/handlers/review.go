@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/FotiadisM/homebnb/server/auth"
+	"github.com/FotiadisM/homebnb/server/modules"
 	"github.com/gorilla/mux"
 )
 
@@ -25,9 +28,6 @@ func (h *ReviewHandler) GetReview(w http.ResponseWriter, r *http.Request) {
 
 // AddReview is a HandleFunc that adds a new review
 func (h *ReviewHandler) AddReview(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	rid := vars["id"]
-
 	claims, err := auth.ExtractClaims(r)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -40,26 +40,31 @@ func (h *ReviewHandler) AddReview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	switch role {
-	case "admin":
-
-	case "visitor":
-		w.WriteHeader(http.StatusForbidden)
+	review := modules.Review{}
+	err = json.NewDecoder(r.Body).Decode(&review)
+	if err != nil {
+		h.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
 		return
+	}
 
-	default:
+	if role == "admin" || role == "host" || role == "user" {
+
 		cid, ok := claims["user_id"].(string)
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		if cid != rid {
-			w.WriteHeader(http.StatusForbidden)
+
+		if cid != review.UserID {
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+
+		review.Created = time.Now()
 	}
 
-	w.Write([]byte("addUser"))
+	w.WriteHeader(http.StatusForbidden)
 }
 
 // UpdateReview is a Handlefunc that updates a review
