@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -25,7 +24,22 @@ func NewReviewHandler(l *log.Logger) *ReviewHandler {
 
 // GetReview is a HandleFunct that returns a review
 func (h *ReviewHandler) GetReview(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("getUser"))
+	vars := mux.Vars(r)
+	rid := vars["id"]
+
+	review, err := storage.GetReview(rid)
+	if err != nil {
+		h.l.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(review)
+	if err != nil {
+		h.l.Println("Error encoding JSON", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 // AddReview is a HandleFunc that adds a new review
@@ -50,9 +64,6 @@ func (h *ReviewHandler) AddReview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	review.Created = time.Now()
-
-	fmt.Println(review.ListingID)
-	fmt.Println(review.UserID)
 
 	if role == "admin" || role == "host" || role == "user" {
 
