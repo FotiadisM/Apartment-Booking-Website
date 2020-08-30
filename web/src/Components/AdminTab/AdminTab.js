@@ -1,64 +1,60 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Table } from "./Table";
 
-function AdminTab() {
+function AdminTab({ user }) {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/users", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${user.access_token}`,
+      },
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          throw Error("Error fetching users", res);
+        }
+      })
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((err) => [console.log(err)]);
+  });
+
   return (
     <div className="AdminTab">
       <div className="container">
         <div style={{ height: "300px", overflowY: "auto" }}>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody style={{ overflow: "scroll", height: "100px" }}>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colSpan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
+          <Table
+            tableHeader={[
+              "Username",
+              "First",
+              "Last",
+              "Role",
+              "Email",
+              "Varify",
+            ]}
+          >
+            {users.map((user) => {
+              return (
+                <tr key={user.id}>
+                  <th scope="row">{user.user_name}</th>
+                  <td>{user.first_name}</td>
+                  <td>{user.last_name}</td>
+                  <td>{user.role}</td>
+                  <td>{user.email}</td>
+                  {!user.varified && (
+                    <td>
+                      <button className="btn btn-sm btn-primary">Varify</button>
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </Table>
         </div>
       </div>
     </div>

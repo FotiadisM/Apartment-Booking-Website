@@ -42,7 +42,7 @@ function Main({ userState, searchState }) {
             <ArchiveTab userState={userState} />
           </Route>
           <Route exact path={`${path}/admin`}>
-            <AdminTab userState={userState} />
+            <AdminTab user={user} />
           </Route>
           <Route exact path={`${path}/settings`}>
             <SettingsTab userState={userState} />

@@ -114,6 +114,41 @@ func AddUser(u modules.User) (id string, err error) {
 	return
 }
 
+// GetUsers blah
+func GetUsers() (ul []modules.User, err error) {
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return
+	}
+
+	coll := client.Database("tedi").Collection("users")
+
+	cursor, err := coll.Find(context.TODO(), bson.D{})
+	if err != nil {
+		return
+	}
+
+	for cursor.Next(context.TODO()) {
+		u := modules.User{}
+		err = cursor.Decode(&u)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		ul = append(ul, u)
+	}
+
+	err = client.Disconnect(context.TODO())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 // GetUser returns a user from the database
 func GetUser(id string) (u modules.User, err error) {
 	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)

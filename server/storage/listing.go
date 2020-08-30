@@ -73,3 +73,40 @@ func AddListing(l modules.Listing) (id string, err error) {
 
 	return
 }
+
+// AddListingReview add review blah blah
+func AddListingReview(r modules.Review) (err error) {
+	uri := "mongodb://" + os.Getenv(mongoDB.host) + ":" + os.Getenv(mongoDB.port)
+	clientOptions := options.Client().ApplyURI(uri)
+
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return
+	}
+
+	coll := client.Database("tedi").Collection("listings")
+
+	oid, err := primitive.ObjectIDFromHex(r.ListingID)
+	if err != nil {
+		return
+	}
+	lr := modules.ListingReview{ID: r.ID}
+
+	filter := bson.D{primitive.E{Key: "_id", Value: oid}}
+	update := bson.D{
+		primitive.E{Key: "$addToSet", Value: bson.D{primitive.E{Key: "reviews", Value: lr}}},
+		primitive.E{Key: "$inc", Value: bson.D{primitive.E{Key: "review_num", Value: 1}}},
+	}
+
+	_, err = coll.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return
+	}
+
+	err = client.Disconnect(context.TODO())
+	if err != nil {
+		return
+	}
+
+	return
+}

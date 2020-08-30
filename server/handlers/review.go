@@ -8,6 +8,7 @@ import (
 
 	"github.com/FotiadisM/homebnb/server/auth"
 	"github.com/FotiadisM/homebnb/server/modules"
+	"github.com/FotiadisM/homebnb/server/storage"
 	"github.com/gorilla/mux"
 )
 
@@ -62,6 +63,28 @@ func (h *ReviewHandler) AddReview(w http.ResponseWriter, r *http.Request) {
 		}
 
 		review.Created = time.Now()
+		review.ID, err = storage.AddReview(review)
+		if err != nil {
+			h.l.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		err = storage.AddListingReview(review)
+		if err != nil {
+			h.l.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(review)
+		if err != nil {
+			h.l.Println("Error encoding JSON", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
+		return
 	}
 
 	w.WriteHeader(http.StatusForbidden)

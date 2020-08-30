@@ -53,7 +53,7 @@ func (h *ListingHandler) AddListing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	l.Reviews = []modules.ListingReviews{}
+	l.Reviews = []modules.ListingReview{}
 
 	switch role {
 	case "admin":

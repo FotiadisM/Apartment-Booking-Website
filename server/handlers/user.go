@@ -96,7 +96,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if u.Role != "user" {
-		u.Varified = true
+		u.Varified = false
 		u.Listings = []modules.UserListings{}
 	}
 
@@ -152,7 +152,36 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 // GetUsers is a HandleFunc that return all users
 func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
+	claims, err := auth.ExtractClaims(r)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
+	role, ok := claims["role"].(string)
+	if !ok {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if role != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	ul, err := storage.GetUsers()
+	if err != nil {
+		h.l.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(ul)
+	if err != nil {
+		h.l.Println("Error encoding JSON", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 // GetUser is a HandleFunc that returns a user

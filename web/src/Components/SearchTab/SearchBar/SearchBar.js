@@ -1,13 +1,28 @@
 import React from "react";
 
+const onSearch = (e) => {
+  const form = document.getElementById("searchMainForm");
+
+  if (!form.checkValidity()) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    form.classList.add("was-validated");
+  } else {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+};
+
 function SearchBar({ searchState }) {
   const [search, setSearch] = searchState;
 
   return (
     <form
-      className="row rounded needs-validation g-2"
+      className="row rounded needs-validation g-2 needs-validation"
+      id="searchMainForm"
+      onSubmit={(e) => onSearch(e)}
       noValidate={true}
-      onSubmit={() => console.log("submit")}
     >
       <div className="col-sm-4">
         <input
