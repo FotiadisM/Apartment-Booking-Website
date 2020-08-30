@@ -15,7 +15,9 @@ function Review({ review }) {
         setRev(data);
       })
       .catch((err) => {
-        console.log(err);
+        if (err.name !== "AbortError") {
+          console.log(err);
+        }
       });
 
     return () => ac.abort();
