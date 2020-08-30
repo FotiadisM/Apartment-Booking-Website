@@ -6,3 +6,8 @@ body {
 #root {
   height: 100%;
 }
+
+td,
+th {
+  vertical-align: middle;
+}

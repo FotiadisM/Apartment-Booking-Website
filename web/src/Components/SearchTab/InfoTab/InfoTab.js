@@ -1,8 +1,56 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Carousel from "./Carousel";
 import Review from "./Review";
 
+const changeRate = (setRate, rate) => {
+  setRate((prevRate) => ({ current: rate, previous: prevRate.current }));
+};
+
+const onSubmit = (review, user, currList) => {
+  fetch("http://localhost:8080/reviews", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${user.access_token}`,
+    },
+    body: JSON.stringify({ ...review, listing_id: currList.id }),
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        throw Error("Failed to post review", res);
+      }
+    })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => console.log(err));
+};
+
 function InfoTab({ currList, user }) {
+  const [review, setReview] = useState({
+    listing_id: "",
+    user_id: user.user.id,
+    user_name: user.user.user_name,
+    score: 0,
+    comment: "",
+  });
+  const [rate, setRate] = useState({
+    current: "",
+    previous: "",
+  });
+
+  useEffect(() => {
+    if (rate.previous !== "") {
+      const prevEl = document.getElementById(rate.previous);
+      prevEl.classList.remove("active");
+    }
+    if (rate.current !== "") {
+      const el = document.getElementById(rate.current);
+      el.classList.add("active");
+    }
+  }, [rate]);
+
   if (Object.keys(currList).length === 0) {
     return <div></div>;
   } else {
@@ -60,26 +108,94 @@ function InfoTab({ currList, user }) {
                   className="form-control"
                   rows="4"
                   placeholder="Tell us what you think!"
+                  value={review.text}
+                  onChange={(e) => {
+                    e.persist();
+                    setReview((prevReview) => ({
+                      ...prevReview,
+                      comment: e.target.value,
+                    }));
+                  }}
                 ></textarea>
                 <div className="d-flex justify-content-between mt-2 mx-1">
                   <div className="btn-group btn-group-sm" role="group">
-                    <button type="button" className="btn btn-outline-primary">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      id="rate1"
+                      onClick={() => {
+                        changeRate(setRate, "rate1");
+                        setReview((prevReview) => ({
+                          ...prevReview,
+                          score: 1,
+                        }));
+                      }}
+                    >
                       1
                     </button>
-                    <button type="button" className="btn btn-outline-primary">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      id="rate2"
+                      onClick={() => {
+                        changeRate(setRate, "rate2");
+                        setReview((prevReview) => ({
+                          ...prevReview,
+                          score: 2,
+                        }));
+                      }}
+                    >
                       2
                     </button>
-                    <button type="button" className="btn btn-outline-primary">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      id="rate3"
+                      onClick={() => {
+                        changeRate(setRate, "rate3");
+                        setReview((prevReview) => ({
+                          ...prevReview,
+                          score: 3,
+                        }));
+                      }}
+                    >
                       3
                     </button>
-                    <button type="button" className="btn btn-outline-primary">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      id="rate4"
+                      onClick={() => {
+                        changeRate(setRate, "rate4");
+                        setReview((prevReview) => ({
+                          ...prevReview,
+                          score: 4,
+                        }));
+                      }}
+                    >
                       4
                     </button>
-                    <button type="button" className="btn btn-outline-primary">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      id="rate5"
+                      onClick={() => {
+                        changeRate(setRate, "rate5");
+                        setReview((prevReview) => ({
+                          ...prevReview,
+                          score: 5,
+                        }));
+                      }}
+                    >
                       5
                     </button>
                   </div>
-                  <button className="btn btn-primary">Submit</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => onSubmit(review, user, currList, setReview)}
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             </div>

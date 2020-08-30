@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -48,6 +49,10 @@ func (h *ReviewHandler) AddReview(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error decoding json", http.StatusBadRequest)
 		return
 	}
+	review.Created = time.Now()
+
+	fmt.Println(review.ListingID)
+	fmt.Println(review.UserID)
 
 	if role == "admin" || role == "host" || role == "user" {
 
@@ -62,7 +67,6 @@ func (h *ReviewHandler) AddReview(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		review.Created = time.Now()
 		review.ID, err = storage.AddReview(review)
 		if err != nil {
 			h.l.Println(err)

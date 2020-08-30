@@ -71,7 +71,7 @@ function SettingsPage({ userState }) {
               value={user.user.user_name}
             />
           </div>
-          <div className="mb-2">
+          {/* <div className="mb-2">
             <label
               htmlFor="passwordSettings"
               className="form-label text-primary mb-1"
@@ -84,7 +84,7 @@ function SettingsPage({ userState }) {
               className="form-control"
               id="passwordSettings"
             />
-          </div>
+          </div> */}
           <div className="mb-2">
             <label
               htmlFor="telSettings"
