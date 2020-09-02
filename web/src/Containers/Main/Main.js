@@ -7,7 +7,7 @@ import ArchiveTab from "../../Components/ArchiveTab/ArchiveTab";
 import AdminTab from "../../Components/AdminTab/AdminTab";
 import SettingsTab from "../../Components/SettingsTab/SettingsTab";
 
-function Main({ userState, searchState }) {
+function Main({ userState, searchState, onSearch, listings }) {
   let { path } = useRouteMatch();
   const [user] = userState;
   const [tab, setTab] = useState({
@@ -33,7 +33,12 @@ function Main({ userState, searchState }) {
       <div className="my-4 flex-grow-1">
         <Switch>
           <Route exact path={path}>
-            <SearchTab searchState={searchState} user={userState[0]} />
+            <SearchTab
+              searchState={searchState}
+              user={user}
+              onSearch={onSearch}
+              listings={listings}
+            />
           </Route>
           <Route exact path={`${path}/new`}>
             <AddTab userState={userState} />

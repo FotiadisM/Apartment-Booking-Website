@@ -1,20 +1,6 @@
 import React from "react";
 
-const onSearch = (e) => {
-  const form = document.getElementById("searchMainForm");
-
-  if (!form.checkValidity()) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    form.classList.add("was-validated");
-  } else {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-};
-
-function SearchBar({ searchState }) {
+function SearchBar({ searchState, onSearch }) {
   const [search, setSearch] = searchState;
 
   return (

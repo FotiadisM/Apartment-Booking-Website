@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import NavBAr from "../NavBar/NavBar";
 
-function Homepage({ userState, searchState }) {
+function Homepage({ userState, searchState, onSearch }) {
   let history = useHistory();
   const [search, setSearch] = searchState;
 
@@ -17,7 +17,12 @@ function Homepage({ userState, searchState }) {
         <hr />
         <form
           className="row border rounded p-4 mt-4 needs-validation shadow"
-          onSubmit={() => history.push("/main")}
+          id="searchMainForm"
+          onSubmit={(e) => {
+            if (onSearch(e)) {
+              history.push("/main");
+            }
+          }}
           noValidate={true}
         >
           <div className="col-12 mb-2">

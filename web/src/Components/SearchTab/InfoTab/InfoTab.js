@@ -51,7 +51,7 @@ function InfoTab({ currList, user }) {
     }
   }, [rate]);
 
-  if (Object.keys(currList).length === 0) {
+  if (currList === null) {
     return <div></div>;
   } else {
     return (
