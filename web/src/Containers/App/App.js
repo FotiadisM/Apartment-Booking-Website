@@ -8,12 +8,12 @@ import SignPage from "../../Components/SignPage/SignPage";
 
 function App() {
   const [listings, setListings] = useState(null);
-  const userState = useState({
+  const [user, setUser] = useState({
     isLogedIn: false,
     access_token: "",
     user: {},
   });
-  const searchState = useState({
+  const [search, setSearch] = useState({
     destination: "",
     from: "",
     to: "",
@@ -35,7 +35,22 @@ function App() {
     e.preventDefault();
     e.stopPropagation();
 
-    fetch("http://localhost:8080/search")
+    let user_id = "";
+    if (user.isLogedIn === true) {
+      user_id = user.user.id;
+    }
+
+    fetch("http://localhost:8080/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...search,
+        people: search.people.toString(),
+        user_id: user_id,
+      }),
+    })
       .then((res) => res.json())
       .then((data) => {
         setListings(data);
@@ -49,21 +64,21 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Homepage
-            userState={userState}
-            searchState={searchState}
+            userState={[user, setUser]}
+            searchState={[search, setSearch]}
             onSearch={onSearch}
           />
         </Route>
         <Route path="/main">
           <Main
-            userState={userState}
-            searchState={searchState}
+            userState={[user, setUser]}
+            searchState={[search, setSearch]}
             onSearch={onSearch}
             listings={listings}
           />
         </Route>
         <Route exact path="/signpage">
-          <SignPage userState={userState} />
+          <SignPage userState={[user, setUser]} />
         </Route>
         <Route path="/">
           <div>404</div>

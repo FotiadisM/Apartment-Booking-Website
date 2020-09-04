@@ -4,6 +4,7 @@ import InfoTab from "./InfoTab/InfoTab";
 import ListingsTab from "./ListingsTab/ListingsTab";
 
 function SearchTab({ searchState, user, onSearch, listings }) {
+  const [search] = searchState;
   const [currList, setCurrList] = useState(null);
 
   useEffect(() => {
@@ -11,6 +12,33 @@ function SearchTab({ searchState, user, onSearch, listings }) {
       setCurrList(listings[0]);
     }
   }, [listings]);
+
+  const onBook = () => {
+    // if (user.isLogedIn === false) {
+    //   return;
+    // }
+    console.log(search.from);
+    console.log(new Date(search.from));
+    console.log(new Date(search.from).toUTCString());
+
+    fetch("http://localhost:8080/book", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user.user.id,
+        listing_id: currList.id,
+        from: search.from,
+        to: search.to,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="SearchTab">
@@ -21,7 +49,7 @@ function SearchTab({ searchState, user, onSearch, listings }) {
             <ListingsTab listings={listings} setCurrList={setCurrList} />
           </div>
           <div className="col-6">
-            <InfoTab currList={currList} user={user} />
+            <InfoTab currList={currList} user={user} onBook={onBook} />
           </div>
         </div>
       </div>

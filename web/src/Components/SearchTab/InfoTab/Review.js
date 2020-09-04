@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function Review({ review }) {
   const [rev, setRev] = useState({});
+
   useEffect(() => {
     const ac = new AbortController();
     const url = "http://localhost:8080/reviews/" + review.id;
@@ -21,7 +22,7 @@ function Review({ review }) {
       });
 
     return () => ac.abort();
-  });
+  }, [review.id]);
 
   return (
     <div className="Review border border-primary rounded-lg py-2 px-3">

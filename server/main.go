@@ -29,7 +29,10 @@ func main() {
 	r.HandleFunc("/refresh", ah.Refresh).Methods("GET")
 
 	sh := handlers.NewSearchHandler(l)
-	r.HandleFunc("/search", sh.GetSearchResults).Methods("GET")
+	r.HandleFunc("/search", sh.GetSearchResults).Methods("POST")
+
+	bh := handlers.NewBookingHandler(l)
+	r.HandleFunc("/book", bh.AddBooking).Methods("POST")
 
 	uh := handlers.NewUserHandler(l)
 	r.HandleFunc("/login", uh.Login).Methods("POST")

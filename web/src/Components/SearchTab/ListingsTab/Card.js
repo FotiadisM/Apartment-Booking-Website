@@ -6,12 +6,7 @@ function Card({ listing, setCurrList }) {
       <div className="col-sm-4">
         <img
           className="rounded-left rounded-lg"
-          src={
-            "http://" +
-            process.env.REACT_APP_BACKEND +
-            "/images/" +
-            listing.photos[0].id
-          }
+          src={"http://localhost:8080/images/" + listing.photos[0].id}
           width="100%"
           alt="listing phote"
         />

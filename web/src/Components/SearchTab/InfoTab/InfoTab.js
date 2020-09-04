@@ -27,7 +27,7 @@ const onSubmit = (review, user, currList) => {
     .catch((err) => console.log(err));
 };
 
-function InfoTab({ currList, user }) {
+function InfoTab({ currList, user, onBook }) {
   const [review, setReview] = useState({
     listing_id: "",
     user_id: user.user.id,
@@ -98,7 +98,12 @@ function InfoTab({ currList, user }) {
                 >
                   Add a review
                 </button>
-                <button className="btn btn-primary ml-2">Book Now!</button>
+                <button
+                  className="btn btn-primary ml-2"
+                  onClick={() => onBook()}
+                >
+                  Book Now!
+                </button>
               </div>
             </div>
 

@@ -21,7 +21,18 @@ func NewSearchHandler(l *log.Logger) *SearchHandler {
 // GetSearchResults is a HandleFunct that returns all listings
 func (s *SearchHandler) GetSearchResults(w http.ResponseWriter, r *http.Request) {
 
-	listings, err := storage.GetListings()
+	d := make(map[string]string)
+	err := json.NewDecoder(r.Body).Decode(&d)
+	if err != nil {
+		s.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
+		return
+	}
+	// fmt.Println(d)
+	// dest := strings.Split(d["destination"], " ")
+	// fmt.Println(dest)
+
+	listings, err := storage.GetSearch(d["destination"])
 	if err != nil {
 		s.l.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -34,5 +45,6 @@ func (s *SearchHandler) GetSearchResults(w http.ResponseWriter, r *http.Request)
 		s.l.Println("Error encoding JSON", err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
 	return
 }
