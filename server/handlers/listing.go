@@ -24,6 +24,18 @@ func NewListingHandler(l *log.Logger) *ListingHandler {
 // GetListings is a HandleFunct that returns all listings
 func (h *ListingHandler) GetListings(w http.ResponseWriter, r *http.Request) {
 
+	listings, err := storage.GetListings()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(listings)
+	if err != nil {
+		h.l.Println("Error encoding JSON", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 // GetListing is a HandleFunct that returns a listing

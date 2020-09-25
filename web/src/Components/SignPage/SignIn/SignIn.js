@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { SignInAPI } from "../../../APIs/SignInAPI";
 import { useHistory } from "react-router-dom";
 
-const onSignIn = (e, signInInfo, setUser, history) => {
+const onSignIn = (e, signInInfo, setUser, history, setListings) => {
   const form = document.getElementById("signInForm");
 
   if (!form.checkValidity()) {
@@ -29,12 +29,25 @@ const onSignIn = (e, signInInfo, setUser, history) => {
           user: data.user,
         });
         history.push("/main");
+
+        fetch("https://localhost:8080/listings", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.access_token}`,
+          },
+        })
+          .then((res) => {
+            if (res.status === 200) {
+              return res.json();
+            }
+          })
+          .then((data) => setListings(data));
       })
       .catch((err) => console.log(err));
   }
 };
 
-function SignIn({ setUser }) {
+function SignIn({ setUser, setListings }) {
   let history = useHistory();
   const [signInInfo, setSingIn] = useState({
     user_name: "",
@@ -49,7 +62,7 @@ function SignIn({ setUser }) {
         className="px-4 py-3 border border-white rounded-lg needs-validation shadow-lg"
         id="signInForm"
         noValidate={true}
-        onSubmit={(e) => onSignIn(e, signInInfo, setUser, history)}
+        onSubmit={(e) => onSignIn(e, signInInfo, setUser, history, setListings)}
       >
         <div className="mb-3">
           <label htmlFor="userNameSignIn" className="form-label text-white">

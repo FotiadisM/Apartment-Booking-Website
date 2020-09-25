@@ -24,6 +24,13 @@ function AdminTab({ user }) {
       .catch((err) => [console.log(err)]);
   });
 
+  const downloadUser = () => {
+    var file = window.URL.createObjectURL(JSON.stringify(users));
+    window.location.assign(file);
+  };
+
+  const downloadListings = () => {};
+
   return (
     <div className="AdminTab">
       <div className="container">
@@ -56,6 +63,14 @@ function AdminTab({ user }) {
             })}
           </Table>
         </div>
+        <button className="btn btn-primary mr-3" onClick={() => downloadUser()}>
+          {" "}
+          Download Users
+        </button>
+        <button className="btn btn-primary" onClick={() => downloadListings()}>
+          {" "}
+          Download Listings
+        </button>
       </div>
     </div>
   );

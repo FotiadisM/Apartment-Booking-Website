@@ -2,7 +2,7 @@ import React from "react";
 import SignUp from "./SignUp/SignUp";
 import SignIn from "./SignIn/SignIn";
 
-function SignPage({ userState }) {
+function SignPage({ userState, setListings }) {
   const [, setUser] = userState;
 
   return (
@@ -20,7 +20,7 @@ function SignPage({ userState }) {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <SignIn setUser={setUser} />
+          <SignIn setUser={setUser} setListings={setListings} />
         </div>
       </div>
       <div className="w-50" style={{ position: "relative" }}>
@@ -33,7 +33,7 @@ function SignPage({ userState }) {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <SignUp setUser={setUser} />
+          <SignUp setUser={setUser} setListings={setListings} />
         </div>
       </div>
     </div>

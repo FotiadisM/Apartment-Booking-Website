@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Carousel from "./Carousel";
+import GoogleMap from "./GoogleMap";
 import Review from "./Review";
 
 const changeRate = (setRate, rate) => {
@@ -78,6 +79,9 @@ function InfoTab({ currList, user, onBook, setListings }) {
               <br />
             </p>
             <p>Rules: {currList.rules}.</p>
+            <div className="my-3" style={{ width: "100%", height: "500px" }}>
+              {/* <GoogleMap listing={currList} /> */}
+            </div>
             <div className="d-flex justify-content-between">
               <h6 className="m-0 ">
                 {currList.review_num} reviews, <br />

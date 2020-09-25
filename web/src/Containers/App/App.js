@@ -79,7 +79,7 @@ function App() {
           />
         </Route>
         <Route exact path="/signpage">
-          <SignPage userState={[user, setUser]} />
+          <SignPage userState={[user, setUser]} setListings={setListings} />
         </Route>
         <Route path="/">
           <div>404</div>
