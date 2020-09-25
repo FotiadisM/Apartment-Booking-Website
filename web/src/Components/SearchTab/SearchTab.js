@@ -3,7 +3,7 @@ import SearchBar from "./SearchBar/SearchBar";
 import InfoTab from "./InfoTab/InfoTab";
 import ListingsTab from "./ListingsTab/ListingsTab";
 
-function SearchTab({ searchState, user, onSearch, listings }) {
+function SearchTab({ searchState, user, onSearch, listings, setListings }) {
   const [search] = searchState;
   const [currList, setCurrList] = useState(null);
 
@@ -17,11 +17,8 @@ function SearchTab({ searchState, user, onSearch, listings }) {
     // if (user.isLogedIn === false) {
     //   return;
     // }
-    console.log(search.from);
-    console.log(new Date(search.from));
-    console.log(new Date(search.from).toUTCString());
 
-    fetch("http://localhost:8080/book", {
+    fetch("https://localhost:8080/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +46,12 @@ function SearchTab({ searchState, user, onSearch, listings }) {
             <ListingsTab listings={listings} setCurrList={setCurrList} />
           </div>
           <div className="col-6">
-            <InfoTab currList={currList} user={user} onBook={onBook} />
+            <InfoTab
+              currList={currList}
+              user={user}
+              onBook={onBook}
+              setListings={setListings}
+            />
           </div>
         </div>
       </div>

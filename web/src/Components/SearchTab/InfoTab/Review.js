@@ -5,7 +5,7 @@ function Review({ review }) {
 
   useEffect(() => {
     const ac = new AbortController();
-    const url = "http://localhost:8080/reviews/" + review.id;
+    const url = "https://localhost:8080/reviews/" + review.id;
 
     fetch(url, {
       method: "GET",

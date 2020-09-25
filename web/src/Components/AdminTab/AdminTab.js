@@ -5,7 +5,7 @@ function AdminTab({ user }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/users", {
+    fetch("https://localhost:8080/users", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${user.access_token}`,

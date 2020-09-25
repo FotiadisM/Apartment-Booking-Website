@@ -23,7 +23,7 @@ const onCreate = (e, photos, listing, setListing, user, history) => {
       data.append(i.toString(), photos[i]);
     }
 
-    fetch("http://localhost:8080/images", {
+    fetch("https://localhost:8080/images", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${user.access_token}`,
@@ -40,7 +40,7 @@ const onCreate = (e, photos, listing, setListing, user, history) => {
       .then((data) => {
         setListing((prevListing) => ({ ...prevListing, photos: data }));
 
-        fetch("http://localhost:8080/listings", {
+        fetch("https://localhost:8080/listings", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${user.access_token}`,

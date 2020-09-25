@@ -7,7 +7,7 @@ import ArchiveTab from "../../Components/ArchiveTab/ArchiveTab";
 import AdminTab from "../../Components/AdminTab/AdminTab";
 import SettingsTab from "../../Components/SettingsTab/SettingsTab";
 
-function Main({ userState, searchState, onSearch, listings }) {
+function Main({ userState, searchState, onSearch, listings, setListings }) {
   let { path } = useRouteMatch();
   const [user] = userState;
   const [tab, setTab] = useState({
@@ -38,6 +38,7 @@ function Main({ userState, searchState, onSearch, listings }) {
               user={user}
               onSearch={onSearch}
               listings={listings}
+              setListings={setListings}
             />
           </Route>
           <Route exact path={`${path}/new`}>

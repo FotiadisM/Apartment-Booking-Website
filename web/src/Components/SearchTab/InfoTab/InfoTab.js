@@ -7,7 +7,7 @@ const changeRate = (setRate, rate) => {
 };
 
 const onSubmit = (review, user, currList) => {
-  fetch("http://localhost:8080/reviews", {
+  fetch("https://localhost:8080/reviews", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${user.access_token}`,
@@ -27,7 +27,7 @@ const onSubmit = (review, user, currList) => {
     .catch((err) => console.log(err));
 };
 
-function InfoTab({ currList, user, onBook }) {
+function InfoTab({ currList, user, onBook, setListings }) {
   const [review, setReview] = useState({
     listing_id: "",
     user_id: user.user.id,

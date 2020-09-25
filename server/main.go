@@ -83,7 +83,7 @@ func main() {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	err = s.ListenAndServe()
+	err = s.ListenAndServeTLS("cert.pem", "key.pem")
 	if err != nil {
 		l.Fatalln("Error starting server:", err)
 	}

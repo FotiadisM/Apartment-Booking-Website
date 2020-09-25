@@ -40,7 +40,7 @@ function App() {
       user_id = user.user.id;
     }
 
-    fetch("http://localhost:8080/search", {
+    fetch("https://localhost:8080/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +75,7 @@ function App() {
             searchState={[search, setSearch]}
             onSearch={onSearch}
             listings={listings}
+            setListings={setListings}
           />
         </Route>
         <Route exact path="/signpage">

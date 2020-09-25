@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
+
+	"github.com/FotiadisM/homebnb/server/modules"
 )
 
 // BookingHandler is a http Handle r
@@ -21,29 +25,57 @@ func NewBookingHandler(l *log.Logger) *BookingHandler {
 // AddBooking bvl
 func (b *BookingHandler) AddBooking(w http.ResponseWriter, r *http.Request) {
 	bi := map[string]string{}
-	// bi := modules.Booking{}
 	err := json.NewDecoder(r.Body).Decode(&bi)
 	if err != nil {
 		b.l.Println(err)
 		http.Error(w, "Error decoding json", http.StatusBadRequest)
 		return
 	}
+	fmt.Println(bi)
 
-	fmt.Println(time.Now())
-
-	const shortForm = "2006-Jan-02"
-	t, err := time.Parse(shortForm, bi["from"])
+	from, err := NewDate(bi["from"])
 	if err != nil {
-		fmt.Println(err)
+		b.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(t)
-	// booking := modules.Booking{
-	// 	ListingID: bi["listing_id"],
-	// 	UserID: bi["user_id"],
-	// 	To: time.Parse("", ),
-	// 	From:
-	// }
 
-	fmt.Println(bi)
+	to, err := NewDate(bi["to"])
+	if err != nil {
+		b.l.Println(err)
+		http.Error(w, "Error decoding json", http.StatusBadRequest)
+		return
+	}
+
+	booking := modules.Booking{
+		UserID:    bi["user_id"],
+		ListingID: bi["listing_id"],
+		From:      from,
+		To:        to,
+	}
+
+	fmt.Println(booking)
+}
+
+// NewDate g
+func NewDate(str string) (date time.Time, err error) {
+
+	s := strings.Split(str, "-")
+
+	year, err := strconv.Atoi(s[0])
+	if err != nil {
+		return
+	}
+
+	month, err := strconv.Atoi(s[1])
+	if err != nil {
+		return
+	}
+
+	day, err := strconv.Atoi(s[2])
+	if err != nil {
+		return
+	}
+
+	return time.Date(year, time.Month(month), day, 1, 0, 0, 0, time.UTC), nil
 }
